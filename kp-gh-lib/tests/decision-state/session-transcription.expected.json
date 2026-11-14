@@ -1,0 +1,4 @@
+{"cutoffId": null,
+ "agent": {"id": 301, "skill": "kp-create-gh-item", "url": "https://github.com/example-org/demo/issues/12#issuecomment-301"},
+ "session": {"id": 302, "url": "https://github.com/example-org/demo/issues/12#issuecomment-302", "body": "**Decision (operator, via Claude Code):**\n\n> Option B\n\n<!-- decision-source: claude-code-session -->"},
+ "latest": "session", "humanCandidates": [], "noDecision": null, "findings": null}

@@ -1,0 +1,3 @@
+issue close 7
+set-status PVT_demo ITEM_7 FIELD_status OPT_done
+branch-cleanup task/7-demo

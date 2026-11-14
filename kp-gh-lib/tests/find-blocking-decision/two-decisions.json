@@ -1,0 +1,33 @@
+{
+  "args": [
+    "example-org/demo",
+    "--issue",
+    "38",
+    "--pr",
+    "40"
+  ],
+  "issues": [
+    {
+      "number": 110,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:decision"
+      ],
+      "body": "blocks: #38\nblocks: #40\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/110"
+    },
+    {
+      "number": 105,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:question"
+      ],
+      "body": "blocks: example-org/demo#40\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/105"
+    }
+  ]
+}

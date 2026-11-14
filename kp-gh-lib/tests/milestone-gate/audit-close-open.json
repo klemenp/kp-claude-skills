@@ -1,0 +1,71 @@
+{
+  "specRepo": "o/spec",
+  "item": {
+    "repo": "o/be",
+    "number": 5,
+    "epic": 20
+  },
+  "epics": [
+    {
+      "repo": "o/spec",
+      "number": 10,
+      "milestone": "M1",
+      "children": [
+        {
+          "repo": "o/be",
+          "number": 1,
+          "state": "CLOSED",
+          "closedAt": "2026-09-10T00:00:00Z"
+        },
+        {
+          "repo": "o/be",
+          "number": 2,
+          "state": "CLOSED",
+          "closedAt": "2026-09-12T00:00:00Z"
+        },
+        {
+          "repo": "o/be",
+          "number": 7,
+          "state": "CLOSED",
+          "closedAt": "2026-09-20T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "repo": "o/spec",
+      "number": 20,
+      "milestone": "M2",
+      "children": [
+        {
+          "repo": "o/be",
+          "number": 5,
+          "state": "OPEN"
+        }
+      ]
+    }
+  ],
+  "audits": [
+    {
+      "number": 31,
+      "created_at": "2026-09-11T00:00:00Z",
+      "body": "audit-unit: milestone:M1\naudit-shas: o/spec@abc\naudit-filed: o/be#2\n"
+    },
+    {
+      "number": 32,
+      "created_at": "2026-09-13T00:00:00Z",
+      "body": "audit-unit: milestone:M1\naudit-shas: o/spec@abc\naudit-filed: o/be#6\n"
+    },
+    {
+      "number": 33,
+      "created_at": "2026-09-15T00:00:00Z",
+      "body": "audit-unit: milestone:M1\naudit-shas: o/spec@abc\naudit-filed: o/be#7\n"
+    }
+  ],
+  "decisions": [
+    {
+      "number": 40,
+      "state": "open",
+      "body": "Close M1?\n\naudit-close: M1\n"
+    }
+  ]
+}

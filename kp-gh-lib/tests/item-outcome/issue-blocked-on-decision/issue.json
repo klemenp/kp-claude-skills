@@ -1,0 +1,8 @@
+{
+  "labels": [
+    {
+      "name": "type:coding"
+    }
+  ],
+  "body": "<!-- human-only:start -->\nspec-ref: fenced/off.md#no\n<!-- human-only:end -->\n### Goal\nDo it.\n\nspec-ref: docs/spec.md#req-3\n"
+}

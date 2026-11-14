@@ -1,0 +1,16 @@
+diff --git a/specs/cache/store.md b/specs/cache/store.md
+index 1111111..2222222 100644
+--- a/specs/cache/store.md
++++ b/specs/cache/store.md
+@@ -9,2 +9,4 @@
+ context
++The cache holds one hour of results.
++<!-- decided in o/be#7 -->
+ context
+diff --git a/README.md b/README.md
+index 3333333..4444444 100644
+--- a/README.md
++++ b/README.md
+@@ -1,1 +1,2 @@
+ # Spec
++A note.

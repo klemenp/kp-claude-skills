@@ -1,0 +1,18 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "verdict": {
+  "id": 21,
+  "verdict": "APPROVED",
+  "reviewed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "atHead": false,
+  "createdAt": "2026-09-12T08:00:00Z",
+  "updatedAt": "2026-09-12T08:00:00Z"
+ },
+ "denial": null,
+ "fixSummary": null,
+ "rounds": {
+  "verdicts": 1,
+  "denials": 0,
+  "fixSummaries": 0
+ }
+}

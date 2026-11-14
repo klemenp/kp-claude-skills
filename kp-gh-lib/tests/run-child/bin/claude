@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# A stand-in for the Claude CLI: records the argv run-child.sh launched it with, one
+# argument per line, then its KP_HEADLESS_CHILD, KP_RUN_ID, KP_CHILD_LOG and KP_EFFORT markers, so the fixtures can
+# assert on the child command without a real run. Optional knobs for the sweep checks:
+# RUN_CHILD_DETACH_DIR — detach a `sleep` (as a child would a long build) and a sleep named
+# GradleDaemon, writing their pids to detached.pid and daemon.pid there;
+# RUN_CHILD_STUB_SLEEP — stay alive this many seconds before exiting.
+printf '%s\n' "$@" "KP_HEADLESS_CHILD=${KP_HEADLESS_CHILD:-}" "KP_RUN_ID=${KP_RUN_ID:-}" \
+  "KP_CHILD_LOG=${KP_CHILD_LOG:-}" "KP_EFFORT=${KP_EFFORT:-}" > "$RUN_CHILD_ARGV_FILE"
+if [ -n "${RUN_CHILD_DETACH_DIR:-}" ]; then
+  nohup sleep 300 >/dev/null 2>&1 &
+  echo $! > "$RUN_CHILD_DETACH_DIR/detached.pid"
+  ( exec -a GradleDaemon sleep 300 ) >/dev/null 2>&1 &
+  echo $! > "$RUN_CHILD_DETACH_DIR/daemon.pid"
+fi
+[ -n "${RUN_CHILD_STUB_SLEEP:-}" ] && sleep "$RUN_CHILD_STUB_SLEEP"
+exit 0

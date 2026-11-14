@@ -1,0 +1,7 @@
+{
+  "args": ["draft:M1", "o/be#2", "--dependent-epic", "o/spec#10"],
+  "expected": {"verdict": "pull-forward", "path": [], "dependentMilestone": "M1", "pullForwardEpic": "o/spec#10"},
+  "issues": {
+    "o/be#2": {"type": "issue", "state": "open", "milestone": "M2", "epic": "o/spec#20", "blocks": [], "blockedBy": [], "resolves": []}
+  }
+}

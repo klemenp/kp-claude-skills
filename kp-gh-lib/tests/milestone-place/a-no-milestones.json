@@ -1,0 +1,13 @@
+{
+  "specRepo": "o/spec",
+  "projectRepos": [
+    "o/be",
+    "o/spec"
+  ],
+  "epics": [],
+  "audits": [],
+  "args": [
+    "--repo",
+    "o/be"
+  ]
+}

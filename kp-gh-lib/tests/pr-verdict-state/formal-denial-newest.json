@@ -1,0 +1,25 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "comments": [
+  {
+   "id": 21,
+   "body": "<!-- kp-review-gh-pr:verdict -->\nverdict: APPROVED\napproved: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n\n## Review: approved\n",
+   "created_at": "2026-09-12T08:00:00Z",
+   "updated_at": "2026-09-12T08:00:00Z"
+  }
+ ],
+ "reviews": [
+  {
+   "id": 901,
+   "state": "COMMENTED",
+   "submitted_at": "2026-09-12T10:00:00Z",
+   "body": "Just a note."
+  },
+  {
+   "id": 902,
+   "state": "CHANGES_REQUESTED",
+   "submitted_at": "2026-09-12T09:00:00Z",
+   "body": "Blocker: `foo.sh:10` breaks."
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Fake gh for the board-ids fixtures. Appends one line per call to $FAKE_CALLS (the
+# arguments joined by a space, newlines inside an argument turned into spaces), then
+# answers from the case's knobs:
+#   FAKE_STDOUT / FAKE_STDERR / FAKE_EXIT   the answer to every call (exit defaults to 0)
+#   FAKE_USER_STDOUT / FAKE_USER_EXIT       the answer to a query on `user(login:…)`
+#                                           instead, when FAKE_USER_EXIT is set
+#   FAKE_SLEEP                              seconds to hang instead of answering
+set -uo pipefail
+
+printf '%s\n' "$(printf '%s ' "$@" | tr '\n' ' ')" >> "$FAKE_CALLS"
+
+# exec, so the watchdog's signal ends the only process holding the caller's pipe.
+[ -z "${FAKE_SLEEP:-}" ] || exec sleep "$FAKE_SLEEP"
+
+if [ -n "${FAKE_USER_EXIT:-}" ] && [[ "$*" == *"user(login:"* ]]; then
+  printf '%s' "${FAKE_USER_STDOUT:-}"
+  exit "$FAKE_USER_EXIT"
+fi
+
+printf '%s' "${FAKE_STDOUT:-}"
+[ -z "${FAKE_STDERR:-}" ] || printf '%s\n' "$FAKE_STDERR" >&2
+exit "${FAKE_EXIT:-0}"

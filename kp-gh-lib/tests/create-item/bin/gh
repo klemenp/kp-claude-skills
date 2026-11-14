@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Fake gh for the create-item fixtures: answers the calls create-item.sh makes, fails the
+# ones the case's FAKE_* knobs name, and logs one line per call to $FAKE_LOG.
+set -euo pipefail
+
+log() { echo "$*" >> "$FAKE_LOG"; }
+
+case "$1 $2" in
+  "issue create")
+    [ "${FAKE_CREATE_FAIL:-}" = 1 ] && { echo "HTTP 422: create refused" >&2; exit 1; }
+    log "issue-create"
+    echo "https://github.com/example-org/demo/issues/42" ;;
+  "issue edit")
+    if [[ " $* " == *" --body-file "* ]]; then
+      [ "${FAKE_EDIT_FAIL:-}" = 1 ] && { echo "HTTP 502: edit failed" >&2; exit 1; }
+      grep -q __ISSUE__ "${*: -1}" && { echo "token left in body" >&2; exit 1; }
+      log "issue-edit-body"
+    else
+      log "issue-edit-assignee ${*: -1}"
+    fi ;;
+  "issue comment")
+    [ "${FAKE_COMMENT_FAIL:-}" = 1 ] && { echo "HTTP 502: comment failed" >&2; exit 1; }
+    grep -q __ISSUE__ "${*: -1}" && { echo "token left in comment" >&2; exit 1; }
+    log "issue-comment" ;;
+  "issue view")
+    echo "I_node_$3" ;;
+  "project item-edit")
+    log "priority" ;;
+  "api graphql")
+    if [[ "$*" == *addSubIssue* ]]; then
+      [ "${FAKE_LINK_FAIL:-}" = 1 ] && { echo "GraphQL: sub-issue limit reached" >&2; exit 1; }
+      log "link $(printf '%s\n' "$@" | sed -nE 's/^(parent|child)=//p' | paste -sd' ' -)"
+      echo '{"data":{"addSubIssue":{"clientMutationId":null}}}'
+    else
+      log "board-add"
+      echo '{"data":{"addProjectV2ItemById":{"item":{"id":"PVTI_new"}}}}'
+    fi ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

@@ -1,0 +1,5 @@
+{"views": 0,
+ "board": [
+  {"status": "Backlog", "repo": "o/a", "number": 1, "labels": ["type:coding", "repo:a"]},
+  {"status": "In progress", "repo": "o/a", "number": 2, "labels": ["type:coding", "repo:a"]}
+ ]}

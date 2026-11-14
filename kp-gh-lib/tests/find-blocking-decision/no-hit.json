@@ -1,0 +1,10 @@
+{
+  "args": [
+    "example-org/demo",
+    "--issue",
+    "38",
+    "--pr",
+    "40"
+  ],
+  "issues": []
+}

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Fake `gh` for trace-matrix.sh and the spec-index.py it runs: answers
+# `gh api [-X GET] <endpoint> [--paginate --slurp] [-H <header>]` with the file in
+# $TRACE_MATRIX_CASE named after the endpoint, every character outside [A-Za-z0-9._-]
+# replaced by `_`, and appends the endpoint to $TRACE_MATRIX_CASE/calls.log. An endpoint
+# with no file but a file of that name plus `.404` fails as GitHub's 404 does (what
+# trace-matrix.sh's `gh_json(missing_ok=True)` recognises); one with neither fails,
+# loudly, as a GitHub error would.
+set -euo pipefail
+
+[ "${1:-}" = api ] || { echo "fake gh: unexpected call: $*" >&2; exit 1; }
+shift
+endpoint=
+while [ $# -gt 0 ]; do
+  case $1 in
+    -X | -H | -f) shift 2 ;;
+    -*) shift ;;
+    *) endpoint=$1; shift ;;
+  esac
+done
+echo "$endpoint" >>"$TRACE_MATRIX_CASE/calls.log"
+file="$TRACE_MATRIX_CASE/$(printf %s "$endpoint" | tr -c 'A-Za-z0-9._-' '_')"
+if [ ! -f "$file" ] && [ -f "$file.404" ]; then
+  echo "gh: Not Found (HTTP 404)" >&2
+  exit 1
+fi
+[ -f "$file" ] || { echo "fake gh: no fixture for endpoint: $endpoint" >&2; exit 1; }
+cat "$file"

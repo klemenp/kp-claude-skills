@@ -1,0 +1,4 @@
+{
+  "body": "\n## owner/repo#41: Use UTC\nRefs owner/repo#41. Stores times in UTC.\n\n### owner/repo#55: not a section\n\n## other/app#7: Drop the cache\nRefs other/app#7. Removes the cache.\n",
+  "headRefName": "spec/resolve-41-batch"
+}

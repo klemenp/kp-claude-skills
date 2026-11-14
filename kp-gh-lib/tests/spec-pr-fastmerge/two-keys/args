@@ -1,0 +1,10 @@
+--decision
+example-org/spec-target#7
+--checked-head
+0123456789abcdef0123456789abcdef01234567
+--key
+REQ-1
+--key
+REQ-2
+--read
+ok

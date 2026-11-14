@@ -1,0 +1,10 @@
+{
+  "pr": {
+    "number": 31,
+    "state": "MERGED",
+    "isDraft": false,
+    "headRefName": "task/7-thing",
+    "mergeStateStatus": "CLEAN"
+  },
+  "closed": []
+}

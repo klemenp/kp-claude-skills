@@ -1,0 +1,16 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "verdict": null,
+ "denial": null,
+ "fixSummary": {
+  "id": 42,
+  "createdAt": "2026-09-12T10:00:00Z",
+  "updatedAt": "2026-09-12T10:00:00Z",
+  "body": "<!-- kp-fix-pr:summary -->\npushed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n## Fix round 1\n\nAddressed the formal review."
+ },
+ "rounds": {
+  "verdicts": 0,
+  "denials": 0,
+  "fixSummaries": 1
+ }
+}

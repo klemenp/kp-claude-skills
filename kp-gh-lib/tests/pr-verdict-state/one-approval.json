@@ -1,0 +1,11 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "comments": [
+  {
+   "id": 7,
+   "body": "<!-- kp-review-gh-pr:verdict -->\nverdict: APPROVED\napproved: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n## Review: approved\n\nAcceptance criteria re-derived and verified; tests and lint green at this head.\n\n### Non-blocking (minor / nit)\n- `kp-gh-lib/scripts/foo.sh:12` \u2014 stale comment. Why: misleads. Fix: reword.\n",
+   "created_at": "2026-09-11T09:00:00Z",
+   "updated_at": "2026-09-11T09:00:00Z"
+  }
+ ]
+}

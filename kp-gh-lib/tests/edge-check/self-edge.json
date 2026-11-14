@@ -1,0 +1,7 @@
+{
+  "args": ["o/be#1", "o/be#1"],
+  "expected": {"verdict": "cycle", "path": ["o/be#1"]},
+  "issues": {
+    "o/be#1": {"type": "issue", "state": "open", "milestone": "M1", "epic": "o/spec#10", "blocks": [], "blockedBy": [], "resolves": []}
+  }
+}

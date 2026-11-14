@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Every skill change goes: board item -> worktree -> PR. This repository is also the
+# live ~/.claude/skills that Claude Code loads, so a commit on main changes the
+# operator's tooling with no review step in between. Reject anything that skips it.
+#
+# Escape hatch: `git commit --no-verify`. Deliberate, and deliberately inconvenient.
+set -euo pipefail
+
+# The branch shape `kp-do-gh-task` creates. Requiring it is the checkable proxy for
+# "this work came from a board item" -- the number is the issue number.
+readonly TASK_BRANCH_PATTERN='^task/[0-9]+-[a-z0-9._-]+$'
+readonly PROTECTED_BRANCH='main'
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+reject() {
+  cat >&2 <<MSG
+
+  Commit rejected: $1
+
+  Skill changes go through the board, a worktree, and a PR:
+
+      cd ~/.claude/skills
+      /kp-create-gh-item "<what needs doing>"   # files the item on the KP Skills board
+      /kp-do-gh-task <issue-number>             # worktree + branch + PR
+      git pull                                  # after the merge, to make it live
+
+  Override only when you mean it: git commit --no-verify
+
+MSG
+  exit 1
+}
+
+if [[ "$branch" == "$PROTECTED_BRANCH" ]]; then
+  reject "'$PROTECTED_BRANCH' is the live skills directory; it advances only by merging a PR."
+fi
+
+# A linked worktree's git dir lives under <common-dir>/worktrees/<name>; the main
+# working tree's does not. Committing from the live directory would leave edited,
+# unreviewed skill files sitting in the directory Claude actually loads.
+if [[ "$(git rev-parse --git-dir)" != *"/worktrees/"* ]]; then
+  reject "commits must be made from a worktree (e.g. ~/.claude/kp-skills-task-<n>), not the live directory."
+fi
+
+if [[ ! "$branch" =~ $TASK_BRANCH_PATTERN ]]; then
+  reject "branch '$branch' is not a task branch; expected task/<issue-number>-<slug>."
+fi
+
+# This repository is published as a snapshot: nothing on the operator's private denylist
+# may be committed. The script prints what matched and where the denylist lives.
+"$(dirname "$0")/check-denylist.sh" staged || exit $?
+
+exit 0

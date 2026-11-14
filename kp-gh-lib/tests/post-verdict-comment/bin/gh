@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Fake gh for the post-verdict-comment fixtures: logs the write call it receives as one
+# line to $FAKE_LOG, followed by the bytes of its `body=@<file>`, and answers with the
+# comment id (the PATCHed one, or 9001 for a create).
+set -euo pipefail
+
+[ "$1" = api ] || { echo "fake gh: unexpected call: $*" >&2; exit 1; }
+shift
+method=POST
+if [ "$1" = -X ]; then method=$2; shift 2; fi
+path=$1
+[ "$2" = -F ] && [[ "$3" == body=@* ]] || { echo "fake gh: no body=@ field: $*" >&2; exit 1; }
+[ "${FAKE_WRITE_FAIL:-}" = 1 ] && { echo "HTTP 502: write failed" >&2; exit 1; }
+
+echo "$method $path" >> "$FAKE_LOG"
+cat "${3#body=@}" >> "$FAKE_LOG"
+if [ "$method" = PATCH ]; then echo "{\"id\": ${path##*/}}"; else echo '{"id": 9001}'; fi

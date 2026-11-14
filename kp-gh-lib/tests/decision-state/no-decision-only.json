@@ -1,0 +1,3 @@
+{"args": ["example-org/demo", "12"], "comments": [
+  {"id": 551, "html_url": "https://github.com/example-org/demo/issues/12#issuecomment-551", "created_at": "2026-10-01T10:00:00Z", "user": {"login": "example-org", "type": "User"}, "body": "<!-- kp-resolve-spec-decision:no-decision -->\nResearch on #12 has not concluded — run /kp-resolve-spec-research 12 first."}
+]}

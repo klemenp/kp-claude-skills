@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Fake gh for the backfill-candidates fixtures: serves the issue listing from
+# $FAKE_STATE/issues.json and an issue's comments from $FAKE_STATE/comments-<n>.json
+# (none when absent), logging every argument vector to $FAKE_STATE/gh.log.
+set -euo pipefail
+
+printf '%s\n' "$*" >> "$FAKE_STATE/gh.log"
+
+case "$1 $2" in
+  "issue list")
+    cat "$FAKE_STATE/issues.json" ;;
+  "api --paginate")
+    number=$(sed -E 's#^repos/[^/]+/[^/]+/issues/([0-9]+)/comments$#\1#' <<<"$3")
+    comments="$FAKE_STATE/comments-$number.json"
+    if [ -f "$comments" ]; then cat "$comments"; else echo '[]'; fi ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

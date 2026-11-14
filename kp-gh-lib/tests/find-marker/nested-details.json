@@ -1,0 +1,31 @@
+{
+  "args": [
+    "example-org/demo",
+    "spec-ref",
+    "REQ-1"
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "<details>\n<details>\ninner\n</details>\nspec-ref: REQ-1\n</details>\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/1"
+    },
+    {
+      "number": 2,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "<details>\n<details>\ninner\n</details>\nstill outer\n</details>\nspec-ref: REQ-1\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/2"
+    }
+  ]
+}

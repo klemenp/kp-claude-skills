@@ -1,0 +1,10 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "blocked-by",
+    "--add",
+    "#4"
+  ],
+  "body": "Intro.\n\n<details>\nblocked-by: #4\n</details>\nspec-ref: x\n"
+}

@@ -1,0 +1,8 @@
+{"views": 2, "args": ["--only", "#7,a#8,o/b#9"],
+ "board": [
+  {"status": "Ready", "repo": "o/a", "number": 7, "labels": ["type:coding", "repo:a"]},
+  {"status": "Ready", "repo": "o/b", "number": 7, "labels": ["type:coding", "repo:b"]},
+  {"status": "Ready", "repo": "o/a", "number": 8, "labels": ["type:coding", "repo:a"]},
+  {"status": "Ready", "repo": "o/b", "number": 9, "labels": ["type:coding", "repo:b"]},
+  {"status": "Ready", "repo": "o/a", "number": 10, "labels": ["type:coding", "repo:a"]}
+ ]}

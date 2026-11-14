@@ -1,0 +1,11 @@
+{
+ "head": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+ "comments": [
+  {
+   "id": 41,
+   "body": "<!-- kp-review-gh-pr:verdict -->\nverdict: REQUEST_CHANGES\nreviewed: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n\n<details><summary>Acceptance basis</summary>\n\n- [ ] AC1 \u2014 proof: run the fixture\n- [x] AC2 \u2014 proof: inspect the diff\nbody-sha256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n\n</details>\n\n## Review: changes requested\n\n### TL;DR (for humans)\nOne blocker and CI is red.\n\n---\n\n### Findings (for the build agent)\n**Blockers**\n- `a.sh:3` \u2014 blocker. Fix: guard it. (AC/rule: AC1)\n\n**CI**\n- validate \u2014 https://example.invalid/run/1\n\n---\nRe-run after fixing: `/kp-do-gh-task 96` \u00b7 Issue: #96\n",
+   "created_at": "2026-09-23T08:00:00Z",
+   "updated_at": "2026-09-23T08:00:00Z"
+  }
+ ]
+}

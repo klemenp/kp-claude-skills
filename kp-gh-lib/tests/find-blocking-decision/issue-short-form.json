@@ -1,0 +1,20 @@
+{
+  "args": [
+    "example-org/demo",
+    "--issue",
+    "38"
+  ],
+  "issues": [
+    {
+      "number": 100,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:decision"
+      ],
+      "body": "<!-- spec-sync\nspec-ref: spec/TECH_SPEC.md#req-007\nblocks: #38\n-->\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/100"
+    }
+  ]
+}

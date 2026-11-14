@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Fake gh for the comment-once fixtures: serves the comment list in
+# $FAKE_STATE/comments.json, appends each POSTed comment with the next id, logs every
+# call's argument vector (one line, %q-quoted) to $FAKE_STATE/calls.log, and fails the
+# comment read when FAKE_READ_FAIL=1.
+set -euo pipefail
+
+state="$FAKE_STATE/comments.json"
+printf '%q ' "$@" >> "$FAKE_STATE/calls.log"
+echo >> "$FAKE_STATE/calls.log"
+
+case "$1 $2" in
+  "api -X")
+    body_file="${*: -1}"
+    body_file="${body_file#body=@}"
+    id=$(jq '([.[].id] | max // 1000) + 1' "$state")
+    jq --argjson id "$id" --rawfile body "$body_file" '. + [{id: $id, body: $body}]' \
+      "$state" > "$state.new" && mv "$state.new" "$state"
+    jq -c --argjson id "$id" '.[] | select(.id == $id)' "$state" ;;
+  api\ *)
+    [ "${FAKE_READ_FAIL:-}" = 1 ] && { echo "HTTP 502: comments unavailable" >&2; exit 1; }
+    jq -c '[.]' "$state" ;;
+  "label create" | "issue edit") ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

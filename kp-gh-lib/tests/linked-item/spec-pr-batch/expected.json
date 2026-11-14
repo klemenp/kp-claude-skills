@@ -1,0 +1,10 @@
+{
+  "issue": null,
+  "via": "spec-pr",
+  "decision": "owner/repo#41",
+  "decisions": [
+    "owner/repo#41",
+    "other/app#7"
+  ],
+  "referenceOnly": false
+}

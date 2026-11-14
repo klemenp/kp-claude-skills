@@ -1,0 +1,3 @@
+# Paths left out of the public mirror: .github/scripts/export-mirror.sh removes each one
+# from the exported tree. One path per line, relative to the repository root.
+.claude/spec-sync.json

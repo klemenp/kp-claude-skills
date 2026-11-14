@@ -1,0 +1,19 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "comments": [
+  {
+   "id": 42,
+   "body": "<!-- kp-fix-pr:summary -->\npushed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n## Fix round 1\n\nAddressed the formal review.\n",
+   "created_at": "2026-09-12T10:00:00Z",
+   "updated_at": "2026-09-12T10:00:00Z"
+  }
+ ],
+ "reviews": [
+  {
+   "id": 921,
+   "state": "CHANGES_REQUESTED",
+   "submitted_at": "2026-09-12T09:00:00Z",
+   "body": "Blocker: `foo.sh:10` breaks."
+  }
+ ]
+}

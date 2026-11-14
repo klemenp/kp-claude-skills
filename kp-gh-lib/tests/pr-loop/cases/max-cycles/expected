@@ -1,0 +1,2 @@
+outcome=max-cycles reason='max-cycles reached; decision #300' state=LOG/pr-loop-demo-12.state.json
+exit 4

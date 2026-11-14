@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Fake gh for the audit-prev fixtures: logs its argument vector to $FAKE_STATE/gh.log,
+# answers `gh issue list` with $FAKE_STATE/issues.json, and fails when $FAKE_STATE/fail
+# exists.
+set -euo pipefail
+
+printf '%s\n' "$*" >> "$FAKE_STATE/gh.log"
+[ -e "$FAKE_STATE/fail" ] && { echo "HTTP 502: issue list failed" >&2; exit 1; }
+case "$1 $2" in
+  "issue list") cat "$FAKE_STATE/issues.json" ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

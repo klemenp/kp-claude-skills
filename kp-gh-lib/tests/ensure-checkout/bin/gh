@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Fake gh for the ensure-checkout fixture: only `gh repo clone <owner/name> <dest>`. It
+# clones the GitHub URL, which the fixture's GIT_CONFIG_GLOBAL `insteadOf` maps to a
+# local bare repo, and sets the raw origin to that GitHub URL as a real `gh` clone does.
+set -euo pipefail
+
+if [ $# -ne 4 ] || [ "$1" != repo ] || [ "$2" != clone ]; then
+  echo "fake gh: unsupported: gh $*" >&2
+  exit 2
+fi
+url="https://github.com/$3.git"
+git clone -q "$url" "$4"
+git -C "$4" remote set-url origin "$url"

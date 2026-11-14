@@ -1,0 +1,11 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "verdict": null,
+ "denial": null,
+ "fixSummary": null,
+ "rounds": {
+  "verdicts": 0,
+  "denials": 0,
+  "fixSummaries": 0
+ }
+}

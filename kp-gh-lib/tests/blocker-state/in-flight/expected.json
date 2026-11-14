@@ -1,0 +1,2 @@
+[{"blocker": "owner/repo#31", "kind": "issue", "state": "OPEN", "done": false, "milestone": null, "laterMilestone": false, "inFlight": false},
+ {"blocker": "owner/repo#30", "kind": "issue", "state": "OPEN", "done": false, "milestone": null, "laterMilestone": false, "inFlight": true}]

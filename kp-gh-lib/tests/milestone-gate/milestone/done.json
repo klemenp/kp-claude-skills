@@ -1,0 +1,50 @@
+{
+  "specRepo": "o/spec",
+  "projectRepos": [
+    "o/be",
+    "o/plan",
+    "o/spec",
+    "o/web"
+  ],
+  "epics": [
+    {
+      "repo": "o/plan",
+      "number": 10,
+      "milestone": "M1",
+      "children": [
+        {
+          "repo": "o/be",
+          "number": 1,
+          "state": "CLOSED",
+          "closedAt": "2026-09-10T00:00:00Z"
+        },
+        {
+          "repo": "o/be",
+          "number": 2,
+          "state": "CLOSED",
+          "closedAt": "2026-09-12T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "repo": "o/plan",
+      "number": 20,
+      "milestone": "M2",
+      "children": [
+        {
+          "repo": "o/web",
+          "number": 5,
+          "state": "OPEN"
+        }
+      ]
+    }
+  ],
+  "audits": [
+    {
+      "number": 31,
+      "repo": "o/spec",
+      "created_at": "2026-09-13T00:00:00Z",
+      "body": "audit-unit: milestone:M1\naudit-shas: o/spec@abc\naudit-filed: none\n"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "verdict": {
+  "id": 13,
+  "verdict": "REQUEST_CHANGES",
+  "reviewed": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "atHead": true,
+  "createdAt": "2026-09-12T10:00:00Z",
+  "updatedAt": "2026-09-12T10:00:00Z"
+ },
+ "denial": {
+  "id": 13,
+  "reviewed": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "createdAt": "2026-09-12T10:00:00Z",
+  "updatedAt": "2026-09-12T10:00:00Z",
+  "findings": "**Blockers**\n- `kp-gh-lib/scripts/foo.sh:10` \u2014 blocker 1. Why: it breaks.\n  Fix: guard it. (AC/rule: AC1)\n\n**Major / Minor / Nits**\n- `kp-fix-pr/SKILL.md:40` \u2014 nit 1. Fix: reword.",
+  "count": 2,
+  "fingerprint": "7425246e9e5ecdbe396d84b803313213a36baffd040ed37f0054279e2f6a07d0",
+  "bySeverity": {
+   "blockers": 1,
+   "major": null,
+   "minor": null,
+   "nits": null,
+   "ci": 0,
+   "combined": 1
+  }
+ },
+ "fixSummary": null,
+ "rounds": {
+  "verdicts": 2,
+  "denials": 2,
+  "fixSummaries": 1
+ }
+}

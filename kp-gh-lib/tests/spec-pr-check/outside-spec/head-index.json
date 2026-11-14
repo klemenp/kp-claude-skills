@@ -1,0 +1,46 @@
+{
+  "repo": "o/spec",
+  "sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "files": {
+    "specs/cache/store.md": {
+      "sections": [
+        {
+          "anchor": "1-caching",
+          "kind": "heading",
+          "level": 2,
+          "title": "Caching",
+          "number": "1",
+          "startLine": 1,
+          "endLine": 22,
+          "refs": []
+        },
+        {
+          "anchor": "REQ-CACHE-001",
+          "kind": "req",
+          "level": 3,
+          "title": "Redis caching layer",
+          "number": null,
+          "startLine": 5,
+          "endLine": 14,
+          "refs": [
+            {
+              "raw": "decided in o/be#7",
+              "type": "decision",
+              "target": "o/be#7"
+            }
+          ]
+        },
+        {
+          "anchor": "REQ-CACHE-002",
+          "kind": "req",
+          "level": 3,
+          "title": "Cache eviction",
+          "number": null,
+          "startLine": 15,
+          "endLine": 22,
+          "refs": []
+        }
+      ]
+    }
+  }
+}

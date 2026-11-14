@@ -1,0 +1,34 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "verdict": {
+  "id": 51,
+  "verdict": "REQUEST_CHANGES",
+  "reviewed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "atHead": false,
+  "createdAt": "2026-09-12T09:00:00Z",
+  "updatedAt": "2026-09-12T09:00:00Z"
+ },
+ "denial": {
+  "id": 51,
+  "reviewed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "createdAt": "2026-09-12T09:00:00Z",
+  "updatedAt": "2026-09-12T09:00:00Z",
+  "findings": "**Blockers**\n- `kp-gh-lib/scripts/foo.sh:10` \u2014 blocker 1. Why: it breaks.\n  Fix: guard it. (AC/rule: AC1)",
+  "count": 1,
+  "fingerprint": "bf32c96f02fd2141ae32451bf739022870021ab4e9ff69137eb34b3dad2c3388",
+  "bySeverity": {
+   "blockers": 1,
+   "major": null,
+   "minor": null,
+   "nits": null,
+   "ci": 0,
+   "combined": null
+  }
+ },
+ "fixSummary": null,
+ "rounds": {
+  "verdicts": 1,
+  "denials": 1,
+  "fixSummaries": 0
+ }
+}

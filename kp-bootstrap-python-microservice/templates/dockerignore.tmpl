@@ -1,0 +1,38 @@
+.git
+.gitignore
+.github
+
+# Virtual environments
+.venv
+venv
+env
+
+# Caches
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+.coverage.*
+htmlcov
+coverage.xml
+
+# Build artifacts
+build
+dist
+*.egg-info
+
+# Local env / data
+.env
+.env.*
+!.env.example
+data/*.json
+
+# Editor / OS
+.idea
+.vscode
+.DS_Store
+
+# Tests are not needed in the runtime image
+tests

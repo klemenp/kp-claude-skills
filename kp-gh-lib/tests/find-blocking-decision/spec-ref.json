@@ -1,0 +1,22 @@
+{
+  "args": [
+    "example-org/demo",
+    "--issue",
+    "38",
+    "--spec-ref",
+    "spec/TECH_SPEC.md#req-007"
+  ],
+  "issues": [
+    {
+      "number": 102,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:conflict"
+      ],
+      "body": "<!-- spec-sync\nspec-ref: spec/TECH_SPEC.md#req-007\nblocks: spec/TECH_SPEC.md#req-007\n-->\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/102"
+    }
+  ]
+}

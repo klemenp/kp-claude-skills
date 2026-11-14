@@ -1,0 +1,4 @@
+{"views": 1, "owner": "organization",
+ "board": [
+  {"status": "Ready", "repo": "o/a", "number": 1, "labels": ["type:coding", "repo:a"]}
+ ]}

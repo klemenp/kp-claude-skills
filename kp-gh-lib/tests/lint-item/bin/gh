@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Fake `gh` for lint-item.py and the spec-index.py and read-context.sh it runs. Answers
+# `gh api <endpoint> [-H <header>] [--paginate] [--jq <expression>]`:
+#   repos/example-org/shop-spec/contents/<path>?ref=<sha>   the file ../spec/<path>, raw
+#   repos/example-org/shop-spec/git/trees/<sha>?recursive=1  a tree listing ../spec/
+#   repos/example-org/shop-api/issues/<n>                    ../case/issue-<n>.json
+#   repos/example-org/shop-api/issues/<n>/comments?per_page=100
+#                                                            ../case/issue-<n>-comments.json
+# A `--jq` expression is applied the way gh prints it, one compact JSON value per line.
+# A missing issue fails as GitHub's 404 does; anything else fails loudly.
+set -euo pipefail
+
+here="$(cd "$(dirname "$0")" && pwd)"
+spec_dir="$here/../spec"
+case_dir="$here/../case"
+spec_sha=0123456789abcdef0123456789abcdef01234567
+
+unexpected() {
+  echo "fake gh: unexpected call: $*" >&2
+  exit 1
+}
+
+all_arguments=$*
+[ "${1:-}" = api ] || unexpected "$all_arguments"
+shift
+endpoint=
+jq_expression=
+while [ $# -gt 0 ]; do
+  case $1 in
+    -H) shift 2 ;;
+    --jq) jq_expression=$2; shift 2 ;;
+    --paginate) shift ;;
+    -*) unexpected "$all_arguments" ;;
+    *) endpoint=$1; shift ;;
+  esac
+done
+
+answer() {
+  if [ -n "$jq_expression" ]; then jq -c "$jq_expression" "$1"; else cat "$1"; fi
+}
+
+case $endpoint in
+  "repos/example-org/shop-spec/contents/"*"?ref=$spec_sha")
+    path=${endpoint#repos/example-org/shop-spec/contents/}
+    path=${path%"?ref=$spec_sha"}
+    [ -f "$spec_dir/$path" ] || { echo "gh: Not Found (HTTP 404)" >&2; exit 1; }
+    cat "$spec_dir/$path"
+    ;;
+  "repos/example-org/shop-spec/git/trees/$spec_sha?recursive=1")
+    (cd "$spec_dir" && ls) | jq -R '{type: "blob", path: .}' | jq -s '{tree: .}'
+    ;;
+  repos/example-org/shop-api/issues/*)
+    name=${endpoint#repos/example-org/shop-api/issues/}
+    case $name in
+      *"/comments?per_page=100") file="$case_dir/issue-${name%%/*}-comments.json" ;;
+      *[!0-9]*) unexpected "$all_arguments" ;;
+      *) file="$case_dir/issue-$name.json" ;;
+    esac
+    [ -f "$file" ] || { echo "gh: Not Found (HTTP 404)" >&2; exit 1; }
+    answer "$file"
+    ;;
+  *) unexpected "$all_arguments" ;;
+esac

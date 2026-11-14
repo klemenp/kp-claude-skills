@@ -1,0 +1,10 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "blocked-by",
+    "--remove",
+    "#5"
+  ],
+  "body": "spec-ref: x\r\n<!-- blocked-by: #5 -->\r\nblocks: #9\r\n"
+}

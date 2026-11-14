@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Fake gh for the ensure-labels fixtures: serves $FAKE_LABELS (a JSON array of
+# {name, color}) as one page of the label list, logs every call's argument vector (one
+# line, %q-quoted) to $FAKE_LOG, and fails `label create` when FAKE_CREATE_FAIL=1.
+set -euo pipefail
+
+printf '%q ' "$@" >> "$FAKE_LOG"
+echo >> "$FAKE_LOG"
+
+case "$1 $2" in
+  api\ repos/*/labels)
+    printf '[%s]\n' "${FAKE_LABELS:-[]}" ;;
+  "label create")
+    [ "${FAKE_CREATE_FAIL:-}" = 1 ] && { echo "HTTP 422: label create refused" >&2; exit 1; }
+    exit 0 ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

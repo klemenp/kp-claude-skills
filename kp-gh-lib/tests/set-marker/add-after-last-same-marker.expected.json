@@ -1,0 +1,4 @@
+{
+  "changed": true,
+  "body": "Text.\r\n\r\nblocked-by: #1\r\nblocked-by: #2\r\nblocked-by: example-org/other#9\r\nspec-ref: x\r\n"
+}

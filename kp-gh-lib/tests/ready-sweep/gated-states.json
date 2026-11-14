@@ -1,0 +1,14 @@
+{"views": 6,
+ "board": [
+  {"status": "Ready", "repo": "o/s", "number": 1, "labels": ["type:decision"]},
+  {"status": "Ready", "repo": "o/s", "number": 2, "labels": ["type:decision"]},
+  {"status": "Ready", "repo": "o/s", "number": 3, "labels": ["type:question"]},
+  {"status": "Ready", "repo": "o/s", "number": 4, "labels": ["type:decision"]},
+  {"status": "Ready", "repo": "o/s", "number": 5, "labels": ["type:conflict"]},
+  {"status": "Ready", "repo": "o/s", "number": 6, "labels": ["type:research"]}
+ ],
+ "comments": {
+  "o/s#1": ["<!-- decision-source: kp-resolve-spec-decision-auto -->\nDecided: A"],
+  "o/s#2": ["<!-- decision-source: claude-code-session -->\nB"],
+  "o/s#4": ["<!-- decision-source: kp-resolve-spec-decision-auto -->\nDecided: A", "B"]
+ }}

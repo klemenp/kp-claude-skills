@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Fake gh for the file-audit fixtures: answers the calls file-audit.sh makes, fails the
+# ones the case's FAKE_* knobs name, and logs one line per call to $FAKE_LOG.
+set -euo pipefail
+
+log() { echo "$*" >> "$FAKE_LOG"; }
+
+case "$1 $2" in
+  "issue create")
+    [ "${FAKE_CREATE_FAIL:-}" = 1 ] && { echo "HTTP 422: create refused" >&2; exit 1; }
+    log "issue-create"
+    echo "https://github.com/example-org/demo/issues/42" ;;
+  "issue edit")
+    log "issue-edit-body"
+    cp "${*: -1}" "$FAKE_EDITED_BODY" ;;
+  "issue close")
+    log "issue-close $3" ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

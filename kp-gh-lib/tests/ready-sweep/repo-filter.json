@@ -1,0 +1,5 @@
+{"views": 1, "args": ["--repo", "o/b"],
+ "board": [
+  {"status": "Ready", "repo": "o/a", "number": 1, "labels": ["type:coding", "repo:a"]},
+  {"status": "Ready", "repo": "o/b", "number": 2, "labels": ["type:coding", "repo:b"]}
+ ]}

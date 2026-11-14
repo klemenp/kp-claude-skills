@@ -1,0 +1,6 @@
+{"views": 2,
+ "board": [
+  {"status": "Ready", "repo": "o/a", "number": 1, "labels": ["type:coding", "repo:b"]},
+  {"status": "Ready", "repo": "o/a", "number": 2, "labels": ["type:coding"]}
+ ],
+ "issues": {"o/a#1": {"title": "No prefix"}}}

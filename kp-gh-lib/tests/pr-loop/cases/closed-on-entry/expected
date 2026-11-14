@@ -1,0 +1,2 @@
+outcome=pr-closed reason='closed before the loop started' state=LOG/pr-loop-demo-12.state.json
+exit 4

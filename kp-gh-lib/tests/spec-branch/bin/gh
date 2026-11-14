@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+# Fake `gh` for the spec-branch.sh fixtures: `pr list` and `pr create` against
+# $FAKE_GH_STATE/prs.json, every call logged to $FAKE_GH_STATE/gh.log.
+import json
+import os
+import sys
+
+state = os.environ["FAKE_GH_STATE"]
+argv = sys.argv[1:]
+prs_path = os.path.join(state, "prs.json")
+
+with open(os.path.join(state, "gh.log"), "a") as log:
+    log.write(" ".join(argv) + "\n")
+
+
+def option(name):
+    return argv[argv.index(name) + 1] if name in argv else None
+
+
+def load_prs():
+    if not os.path.exists(prs_path):
+        return []
+    with open(prs_path) as prs_file:
+        return json.load(prs_file)
+
+
+command = argv[:2]
+if command == ["pr", "list"]:
+    wanted_state = option("--state") or "open"
+    kept = [pr for pr in load_prs() if pr["headRefName"] == option("--head")
+            and (wanted_state == "all" or pr["state"] == "OPEN")]
+    fields = option("--json").split(",")
+    print(json.dumps([{field: pr[field] for field in fields} for pr in kept]))
+elif command == ["pr", "create"]:
+    if os.path.exists(os.path.join(state, "fail-pr-create")):
+        print("fake gh: pr create failed", file=sys.stderr)
+        sys.exit(1)
+    prs = load_prs()
+    number = max((pr["number"] for pr in prs), default=0) + 1
+    url = f"https://github.com/example-org/kp-demo-spec/pull/{number}"
+    prs.append({"number": number, "state": "OPEN", "headRefName": option("--head"),
+                "url": url})
+    with open(prs_path, "w") as prs_file:
+        json.dump(prs, prs_file)
+    print(url)
+else:
+    print(f"fake gh: unsupported subcommand: {' '.join(command)}", file=sys.stderr)
+    sys.exit(1)

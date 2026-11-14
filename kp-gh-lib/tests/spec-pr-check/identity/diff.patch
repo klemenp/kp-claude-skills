@@ -1,0 +1,9 @@
+diff --git a/TECH_SPEC.md b/TECH_SPEC.md
+index 1111111..2222222 100644
+--- a/TECH_SPEC.md
++++ b/TECH_SPEC.md
+@@ -9,2 +9,4 @@
+ context
++The cache holds one hour of results.
++<!-- decided in o/be#7 -->
+ context

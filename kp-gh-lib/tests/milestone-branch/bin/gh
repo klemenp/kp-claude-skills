@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""A stand-in for `gh`, answering only the REST calls milestone-branch.sh makes, from the
+scenario file named by $FAKE_GH_SCENARIO: `branches` (the branch names that exist) and
+`fail` (calls that fail with HTTP 500: `lookup`, `listing`, `head`, `post`). The default
+branch is `main` and its HEAD is `head-main`. A `--jq` call prints what its filter would.
+Every git/refs POST is logged to $FAKE_GH_POST_LOG as `<repo> <ref> <sha>`."""
+import json
+import os
+import sys
+
+scenario = json.load(open(os.environ["FAKE_GH_SCENARIO"]))
+failing = set(scenario.get("fail", []))
+branches = scenario.get("branches", [])
+args = sys.argv[1:]
+fields = dict(args[i + 1].split("=", 1) for i, arg in enumerate(args) if arg == "-f")
+path = next(arg for arg in args[1:] if arg.startswith("repos/")).split("?")[0]
+owner, name, *rest = path.removeprefix("repos/").split("/")
+repo = f"{owner}/{name}"
+
+
+def server_error():
+    sys.exit("gh: Server Error (HTTP 500)")
+
+
+if "-X" in args:
+    if rest != ["git", "refs"]:
+        sys.exit(f"fake gh: unexpected POST {path}")
+    if "post" in failing:
+        server_error()
+    with open(os.environ["FAKE_GH_POST_LOG"], "a") as log:
+        log.write(f"{repo} {fields['ref']} {fields['sha']}\n")
+    print(json.dumps({"ref": fields["ref"], "object": {"sha": fields["sha"]}}))
+elif not rest:
+    print("main")
+elif rest == ["branches"]:
+    if "listing" in failing:
+        server_error()
+    print("\n".join(branches))
+elif rest[0] == "branches":
+    if "lookup" in failing:
+        server_error()
+    if "/".join(rest[1:]) not in branches:
+        sys.exit("gh: Branch not found (HTTP 404)")
+    print(json.dumps({"name": "/".join(rest[1:])}))
+elif rest == ["git", "ref", "heads", "main"]:
+    if "head" in failing:
+        server_error()
+    print("head-main")
+else:
+    sys.exit(f"fake gh: unexpected call {args!r}")

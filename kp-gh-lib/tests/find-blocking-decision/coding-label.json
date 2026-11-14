@@ -1,0 +1,20 @@
+{
+  "args": [
+    "example-org/demo",
+    "--issue",
+    "38"
+  ],
+  "issues": [
+    {
+      "number": 104,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "blocks: #38\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/104"
+    }
+  ]
+}

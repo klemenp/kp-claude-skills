@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# This repository is published as a snapshot, so a commit message must not name anything
+# on the operator's private denylist. pre-commit checks the staged change the same way;
+# the message only exists here.
+#
+# Escape hatch: `git commit --no-verify`. Deliberate, and deliberately inconvenient.
+set -euo pipefail
+
+"$(dirname "$0")/check-denylist.sh" message "$1"

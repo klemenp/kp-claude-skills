@@ -1,0 +1,3 @@
+{"cutoffId": 103, "agent": null, "session": null, "latest": null,
+ "humanCandidates": [{"id": 104, "url": "https://github.com/example-org/demo/issues/12#issuecomment-104", "body": "Which option keeps the API stable?"}],
+ "noDecision": null, "findings": null}

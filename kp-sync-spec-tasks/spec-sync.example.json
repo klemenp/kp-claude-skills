@@ -1,0 +1,60 @@
+{
+  "$schema-note": "Place this at .claude/spec-sync.json in a repo to configure kp-sync-spec-tasks. All fields are OPTIONAL; the skill uses the defaults shown here when the file or a field is absent. This file is an example and is NOT read from the skill directory.",
+
+  "targetRepo": {
+    "note": "Repository (owner/name) that created issues are filed in — the app/service repo where the work is built, NOT the spec repo. May instead be passed via --repo; if neither is set, the skill lists candidates and asks. The skill never defaults to the spec repo. If this repo does not exist yet, the skill creates a single 'create the repository' bootstrap issue in the spec repo (the only item ever allowed there) and defers everything else until the repo exists.",
+    "value": "my-org/my-app"
+  },
+
+  "specRepo": {
+    "note": "Repository (owner/name) holding the spec docs themselves — the repo kp-resolve-spec-decision branches and opens its spec-amendment PR against. kp-sync-spec-tasks pins its coding items' spec: lines to this repo's default-branch commit. Usually the repo the skills are run from, so this is only needed when a session runs from the app repo instead. May also be passed via --spec-repo.",
+    "value": "my-org/my-app-spec"
+  },
+
+  "project": {
+    "note": "GitHub Projects (v2) board to add every created issue to. May instead be passed via the --project argument; if neither the argument nor this field is set, the skill lists available projects and asks which to use. The owner login is also used to auto-assign human-gated items (decision/question/conflict/research). Provide owner + number (per-owner) and/or id (global node id).",
+    "owner": "my-org",
+    "number": 7,
+    "id": "PVT_kwDOxxxxxxxx"
+  },
+
+  "repoCodes": {
+    "note": "Short stable uppercase code per repo, prepended to every created issue title as '[<CODE>] ' so items from different repos are distinguishable on a shared board (each issue also gets a 'repo:<name>' label). The one exception is a milestone epic (a type:epic carrying 'spec-ref: milestone:<id>'): it groups a roadmap milestone across repos, so it gets neither the prefix nor the label, whether created or reused. When a repo has no entry, the skill derives a code from the repo name (owner and org-wide prefix stripped, uppercased). Never change a code once board items carry it.",
+    "my-org/my-app": "APP",
+    "my-org/billing-service": "BILLING"
+  },
+
+  "labels": {
+    "note": "Optional non-type labels applied to every created issue (e.g. a provenance tag). Default: none.",
+    "always": ["spec-sync"]
+  },
+
+  "typeLabels": {
+    "note": "The item-typing taxonomy. Each created item gets exactly one of these. The set is extensible at runtime: if specs imply a category not listed, the skill creates a new type:<x> label and reports it. color is a 6-hex string with no leading '#'.",
+    "coding":   { "label": "type:coding",   "color": "1d76db", "description": "Implementable work; requirement is unambiguous" },
+    "decision": { "label": "type:decision", "color": "d93f0b", "description": "Needs a binding human design decision" },
+    "question": { "label": "type:question", "color": "fbca04", "description": "Needs info/clarification from a human" },
+    "research": { "label": "type:research", "color": "0e8a16", "description": "Needs investigation/spike before speccing" },
+    "conflict": { "label": "type:conflict", "color": "b60205", "description": "Two or more spec docs contradict each other" },
+    "epic":     { "label": "type:epic",     "color": "5319e7", "description": "Container/parent issue" }
+  },
+
+  "epicMapping": {
+    "note": "How spec docs map to epics. 'per-doc' = one epic per markdown file (default). 'per-section' = one epic per top-level (H1) section. 'milestone' = no doc or section epic: each new item is filed under its REQ-* sub-epic when milestone-of.sh places one in the ref's planned milestone or earlier, else under that milestone's epic (spec-ref: milestone:M<n>, created repo-neutral as 'Epic M<n> — <title>' when missing). The plan comes from the one milestone table across the spec docs (first header cell 'Milestone', every first-column cell starting with M<number>; slash shorthand like REQ-CART-001/002 lists each id). A ref listed in no row or in several gets no item and is reported unplaced; zero or several milestone tables stop the run before anything is created. 'overrides' pins specific doc slugs to an epic; the value is either a title string, or an object {title, repo} where 'repo' fans that epic and its children out to the repo that owns them, overriding targetRepo.",
+    "strategy": "per-doc",
+    "overrides": {
+      "auth-spec": "Epic: Authentication & Authorization",
+      "billing-spec": { "title": "Epic: Billing", "repo": "my-org/billing-service" }
+    }
+  },
+
+  "requirementRepos": {
+    "note": "Routes requirements to the repo that owns them by requirement-ID area: the key is <AREA> in REQ-<AREA>-<nnn>; a derived <doc-slug>#<heading-path-slug> key has no area and never matches. 'repo' is where that area's items are deduped, classified, filed, labelled and code-checked; 'path' is a local clone of it, relative to the run's repo root. Each ref's repo resolves in order: requirementRepos[<AREA>].repo -> epicMapping override 'repo' -> --repo / targetRepo. When that differs from targetRepo, dedup searches both repos. Before classifying, every path must be a git work tree whose origin is 'repo' and must fetch; implementation is detected against origin/release/M<k> (the current milestone's branch) when that origin has it, else origin/<default branch>, not the working tree. A bad path or failed fetch stops the run before anything is created.",
+    "UI": { "repo": "my-org/my-app-frontend", "path": "../my-app-frontend" }
+  },
+
+  "specGlobs": {
+    "note": "Optional override of the discovery defaults used when no path/glob argument is passed. Searched in order.",
+    "patterns": ["docs/specs/**/*.md", "specs/**/*.md", "SPEC*.md"]
+  }
+}

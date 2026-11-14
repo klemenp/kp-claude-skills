@@ -1,0 +1,29 @@
+[
+  {
+    "blocker": "owner/repo#4",
+    "kind": "issue",
+    "state": "CLOSED",
+    "done": true,
+    "milestone": "M1",
+    "laterMilestone": false,
+    "inFlight": false
+  },
+  {
+    "blocker": "owner/repo#5",
+    "kind": "issue",
+    "state": "OPEN",
+    "done": false,
+    "milestone": "M1",
+    "laterMilestone": false,
+    "inFlight": false
+  },
+  {
+    "blocker": "owner/repo#6",
+    "kind": "issue",
+    "state": "OPEN",
+    "done": false,
+    "milestone": "M1",
+    "laterMilestone": false,
+    "inFlight": false
+  }
+]

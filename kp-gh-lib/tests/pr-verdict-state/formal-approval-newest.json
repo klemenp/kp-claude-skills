@@ -1,0 +1,19 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "comments": [
+  {
+   "id": 31,
+   "body": "<!-- kp-review-gh-pr:verdict -->\nverdict: REQUEST_CHANGES\nreviewed: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n\n## Review: changes requested\n\n### Findings (for the build agent)\n**Blockers**\n- `kp-gh-lib/scripts/foo.sh:10` \u2014 blocker 1. Why: it breaks.\n  Fix: guard it. (AC/rule: AC1)\n",
+   "created_at": "2026-09-12T08:00:00Z",
+   "updated_at": "2026-09-12T08:00:00Z"
+  }
+ ],
+ "reviews": [
+  {
+   "id": 911,
+   "state": "APPROVED",
+   "submitted_at": "2026-09-12T09:00:00Z",
+   "body": "LGTM."
+  }
+ ]
+}

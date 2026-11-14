@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Fake sibling script for item-outcome.sh. run.sh copies it next to the script under each
+# sibling's name; it answers from $ITEM_OUTCOME_CASE/<name without .sh>.json and logs the
+# call to $ITEM_OUTCOME_CALLS. A missing file fails, as the real script's gh failure would.
+set -euo pipefail
+
+name="$(basename "$0" .sh)"
+echo "$name $*" >>"$ITEM_OUTCOME_CALLS"
+file="$ITEM_OUTCOME_CASE/$name.json"
+[ -f "$file" ] || { echo "fake $name: no fixture for: $*" >&2; exit 1; }
+cat "$file"

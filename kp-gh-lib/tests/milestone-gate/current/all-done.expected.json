@@ -1,0 +1,7 @@
+{
+  "project": "o/1",
+  "milestone": "M2",
+  "epics": [
+    "o/spec#20"
+  ]
+}

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# `gh` stub for the spec-pr-fastmerge fixtures: logs its argv to gh.log, then answers from
+# the case directory ($SPEC_PR_FASTMERGE_CASE).
+set -uo pipefail
+case_dir="$SPEC_PR_FASTMERGE_CASE"
+out="$SPEC_PR_FASTMERGE_OUT"
+echo "$*" >> "$out/gh.log"
+
+case "${1:-} ${2:-}" in
+  "pr checks")
+    [ -f "$case_dir/ci-stderr" ] && cat "$case_dir/ci-stderr" >&2
+    exit "$(cat "$case_dir/ci-exit" 2>/dev/null || echo 0)"
+    ;;
+  "pr view")
+    if [ ! -f "$case_dir/head" ]; then
+      echo "HTTP 404" >&2
+      exit 1
+    fi
+    cat "$case_dir/head"
+    exit 0
+    ;;
+  "pr comment")
+    [ -f "$case_dir/comment-stderr" ] && cat "$case_dir/comment-stderr" >&2
+    code="$(cat "$case_dir/comment-exit" 2>/dev/null || echo 0)"
+    if [ "$code" -eq 0 ]; then
+      body_file=""
+      while [ $# -gt 0 ]; do
+        if [ "$1" = --body-file ]; then body_file="$2"; fi
+        shift
+      done
+      cp "$body_file" "$out/posted-comment.md"
+    fi
+    exit "$code"
+    ;;
+esac
+exit 99

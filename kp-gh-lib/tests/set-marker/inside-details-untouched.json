@@ -1,0 +1,11 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "blocked-by",
+    "--replace",
+    "#4",
+    "#8"
+  ],
+  "body": "Intro.\n<details>\n<summary>Evidence</summary>\n<details>\nblocked-by: #4\n</details>\nblocked-by: #4\n</details>\nblocked-by: #4\n"
+}

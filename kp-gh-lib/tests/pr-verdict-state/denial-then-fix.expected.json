@@ -1,0 +1,39 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "verdict": {
+  "id": 11,
+  "verdict": "REQUEST_CHANGES",
+  "reviewed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "atHead": false,
+  "createdAt": "2026-09-12T08:00:00Z",
+  "updatedAt": "2026-09-12T08:00:00Z"
+ },
+ "denial": {
+  "id": 11,
+  "reviewed": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "createdAt": "2026-09-12T08:00:00Z",
+  "updatedAt": "2026-09-12T08:00:00Z",
+  "findings": "**Blockers**\n- `kp-gh-lib/scripts/foo.sh:10` \u2014 blocker 1. Why: it breaks.\n  Fix: guard it. (AC/rule: AC1)\n- `kp-gh-lib/scripts/foo.sh:11` \u2014 blocker 2. Why: it breaks.\n  Fix: guard it. (AC/rule: AC2)\n\n**Major / Minor / Nits**\n- `kp-fix-pr/SKILL.md:40` \u2014 nit 1. Fix: reword.\n\n**CI**\n- validate \u2014 https://github.com/example-org/shop-tools/actions/runs/1",
+  "count": 4,
+  "fingerprint": "11fcd0c5e7e258ee215687ec2601e940288b557e22d4a8a15de9e425e42f5132",
+  "bySeverity": {
+   "blockers": 2,
+   "major": null,
+   "minor": null,
+   "nits": null,
+   "ci": 1,
+   "combined": 1
+  }
+ },
+ "fixSummary": {
+  "id": 12,
+  "createdAt": "2026-09-12T09:00:00Z",
+  "updatedAt": "2026-09-12T09:00:00Z",
+  "body": "<!-- kp-fix-pr:summary -->\npushed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n## Fix round 1\n\nAddressed both blockers and the failing check.\n- fixed the retry loop\n- pinned the action"
+ },
+ "rounds": {
+  "verdicts": 1,
+  "denials": 1,
+  "fixSummaries": 1
+ }
+}

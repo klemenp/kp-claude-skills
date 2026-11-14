@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Fake `gh` for item-outcome.sh: answers its two reads from the files in
+# $ITEM_OUTCOME_CASE — issue.json for `issue view`, pr.json for `pr view` — and logs each
+# call to $ITEM_OUTCOME_CALLS. A read with no file fails, as a GitHub error would.
+set -euo pipefail
+
+echo "gh $*" >>"$ITEM_OUTCOME_CALLS"
+case "$1 $2" in
+  "issue view") file="$ITEM_OUTCOME_CASE/issue.json" ;;
+  "pr view") file="$ITEM_OUTCOME_CASE/pr.json" ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac
+[ -f "$file" ] || { echo "fake gh: no fixture for: $*" >&2; exit 1; }
+cat "$file"

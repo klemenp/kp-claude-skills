@@ -1,0 +1,1 @@
+FAIL identity: `REQ-CACHE-001` (TECH_SPEC.md#REQ-CACHE-001, lines 5-14 at the head) heading `Redis caching layer` (req, level 3) at the base is `Redis cache` (req, level 3) at the head

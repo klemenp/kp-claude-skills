@@ -1,0 +1,23 @@
+# Per-session run state kp-gh-lib's compaction hook restores. Runtime, never source.
+kp-gh-lib/state/
+
+# Claude Code harness writes its synced Anthropic skills here. This repo does not own it.
+synced/
+
+# Personal / machine-specific Claude Code config (webhooks, local paths).
+.claude/settings.local.json
+
+# kp-do-gh-task worktrees resolve to ../kp-skills-task-<n> (legacy: ../task-<n>), but
+# guard against strays.
+kp-skills-task-*/
+task-*/
+
+# OS / editor cruft
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.pyc

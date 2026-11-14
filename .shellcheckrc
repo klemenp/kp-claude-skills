@@ -1,0 +1,5 @@
+# kp-msg-me/scripts/send.sh sources a config file whose path comes from
+# $KP_MSG_ME_CONFIG (or a $HOME default), so shellcheck cannot follow it at lint
+# time. That indirection is the point -- credentials stay outside the repo -- so
+# SC1090 is expected here rather than a defect to fix.
+disable=SC1090

@@ -1,0 +1,11 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "comments": [
+  {
+   "id": 31,
+   "body": "<!-- human-only:start (not LLM/spec context) -->\n> **For humans:** ignore this, it is a reading aid.\n- a bullet that must never be counted\n<!-- human-only:end -->\n<!-- kp-review-gh-pr:verdict -->\nverdict: REQUEST_CHANGES\nreviewed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n## Review: changes requested\n\n### TL;DR (for humans)\nTwo blockers remain and CI is red. Fix the timeout first.\n\n---\n\n### Findings (for the build agent)\n**Blockers**\n- `kp-gh-lib/scripts/foo.sh:10` \u2014 blocker 1. Why: it breaks.\n  Fix: guard it. (AC/rule: AC1)\n\n**Major**\n- `a.md:1` \u2014 major one.\n\n**Minor**\n- `b.md:2` \u2014 minor one.\n\n**Nits**\n- `kp-fix-pr/SKILL.md:40` \u2014 nit 1. Fix: reword.\n\n---\nRe-run after fixing: `/kp-do-gh-task 90` \u00b7 Issue: #90\n",
+   "created_at": "2026-09-14T08:00:00Z",
+   "updated_at": "2026-09-14T08:00:00Z"
+  }
+ ]
+}

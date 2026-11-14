@@ -1,0 +1,5 @@
+{
+  "issue": "owner/repo#7",
+  "milestone": "M2",
+  "waitingOn": "M1"
+}

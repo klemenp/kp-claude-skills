@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Fake gh: `pr checks` prints $FAKE_CHECKS and exits $FAKE_CHECKS_EXIT; `run view` prints
+# $FAKE_LOG (when set) after sleeping $FAKE_LOG_SLEEP seconds and exits $FAKE_LOG_EXIT.
+# Each call is recorded in $FAKE_STATE/calls.
+set -euo pipefail
+printf '%s\n' "$*" >> "$FAKE_STATE/calls"
+case "$1 $2" in
+  "pr checks")
+    [ -z "${FAKE_CHECKS:-}" ] || cat "$FAKE_CHECKS"
+    exit "${FAKE_CHECKS_EXIT:-0}"
+    ;;
+  "run view")
+    # exec, so the caller's timeout kills the sleep itself rather than orphaning it.
+    [ "${FAKE_LOG_SLEEP:-0}" = 0 ] || exec sleep "$FAKE_LOG_SLEEP"
+    [ -z "${FAKE_LOG:-}" ] || cat "$FAKE_LOG"
+    exit "${FAKE_LOG_EXIT:-0}"
+    ;;
+  *) echo "fake gh: unexpected: $*" >&2; exit 1 ;;
+esac

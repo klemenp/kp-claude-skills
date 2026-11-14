@@ -1,0 +1,6 @@
+gated o/s#1 | [X] Item 1 | type:decision | answered-agent
+gated o/s#2 | [X] Item 2 | type:decision | answered-person
+gated o/s#3 | [X] Item 3 | type:question | unanswered
+gated o/s#4 | [X] Item 4 | type:decision | check:answered-agent
+gated o/s#5 | [X] Item 5 | type:conflict | -
+gated o/s#6 | [X] Item 6 | type:research | -

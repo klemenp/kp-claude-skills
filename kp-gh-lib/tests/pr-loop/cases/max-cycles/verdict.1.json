@@ -1,0 +1,1 @@
+{"head":"aaaaaaa","verdict":{"id":1,"verdict":"REQUEST_CHANGES","reviewed":"aaaaaaa","atHead":true,"createdAt":"2026-10-09T09:00:00Z","updatedAt":"2026-10-09T09:00:00Z"},"denial":{"id":1,"findings":"- [blocker] thing","count":3,"fingerprint":"fp-3","bySeverity":{"blockers":3,"major":0,"minor":1,"nits":0,"ci":0,"combined":null}},"fixSummary":null,"rounds":1}

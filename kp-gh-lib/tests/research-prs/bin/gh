@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Fake `gh` for research-prs.sh: `pr list` answers from $RESEARCH_PRS_CASE/pr-list.json
+# (absent: the call fails, as a GitHub error would); `api graphql` answers the board add
+# with item id `PVTI_<project>_<content>`, or fails for a content id listed in the case's
+# board-fail file.
+set -euo pipefail
+
+case "$1 $2" in
+  "pr list")
+    file="$RESEARCH_PRS_CASE/pr-list.json"
+    [ -f "$file" ] || { echo "fake gh: no fixture for: $*" >&2; exit 1; }
+    cat "$file"
+    ;;
+  "api graphql")
+    project="" content=""
+    for arg in "$@"; do
+      case "$arg" in
+        project=*) project=${arg#project=} ;;
+        content=*) content=${arg#content=} ;;
+      esac
+    done
+    if [ -f "$RESEARCH_PRS_CASE/board-fail" ] && grep -qx "$content" "$RESEARCH_PRS_CASE/board-fail"; then
+      echo "fake gh: board add refused for $content" >&2
+      exit 1
+    fi
+    printf '{"data":{"addProjectV2ItemById":{"item":{"id":"PVTI_%s_%s"}}}}\n' "$project" "$content"
+    ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

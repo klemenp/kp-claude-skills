@@ -1,0 +1,4 @@
+{"cutoffId": null,
+ "agent": {"id": 602, "skill": "kp-resolve-spec-decision-auto", "url": "https://github.com/example-org/demo/issues/12#issuecomment-602"},
+ "session": null, "latest": "agent", "humanCandidates": [], "noDecision": null,
+ "findings": {"id": 601, "url": "https://github.com/example-org/demo/issues/12#issuecomment-601"}}

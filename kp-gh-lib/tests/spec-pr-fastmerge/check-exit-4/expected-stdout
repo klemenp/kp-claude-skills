@@ -1,0 +1,1 @@
+fallback: spec-pr-check example-org/spec-target#7 exit 4: fetch failed: HTTP 502

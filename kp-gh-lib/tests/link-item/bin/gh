@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Fake gh for the link-item fixtures: answers the calls link-item.sh makes, shaped by the
+# case's FAKE_* knobs, and logs one line per call to $FAKE_LOG.
+#   FAKE_CHILD_PARENT  owner/repo#n the child (issue 9) already sits under; unset = none
+#   FAKE_NATIVE=1      `gh issue edit --help` lists --add-sub-issue
+#   FAKE_GRAPHQL_FAIL=1  the addSubIssue mutation fails
+#   FAKE_EXTENSION=1   `gh extension list` shows gh-sub-issue
+#   FAKE_PARENT_BODY   the parent's body (default "Epic body.")
+#   FAKE_BOARD_FAIL=1  addProjectV2ItemById fails
+# A body written with --body-file is copied to $FAKE_WRITTEN.
+set -euo pipefail
+
+log() { echo "$*" >> "$FAKE_LOG"; }
+arg() { printf '%s\n' "$@" | sed -nE "s/^$1=//p"; }
+
+case "$1 $2" in
+  "api graphql")
+    if [[ "$*" == *addSubIssue* ]]; then
+      [ "${FAKE_GRAPHQL_FAIL:-}" = 1 ] && { echo "GraphQL: sub-issues unavailable" >&2; exit 1; }
+      log "graphql-link $(arg parent "$@") $(arg child "$@")"
+      echo '{"data":{"addSubIssue":{"clientMutationId":null}}}'
+    elif [[ "$*" == *addProjectV2ItemById* ]]; then
+      [ "${FAKE_BOARD_FAIL:-}" = 1 ] && { echo "HTTP 502: board add failed" >&2; exit 1; }
+      log "board-add $(arg content "$@")"
+      echo '{"data":{"addProjectV2ItemById":{"item":{"id":"PVTI_new"}}}}'
+    else
+      number="$(arg number "$@")"
+      log "lookup $(arg owner "$@")/$(arg name "$@")#$number"
+      parent=null
+      if [ "$number" = 9 ] && [ -n "${FAKE_CHILD_PARENT:-}" ]; then
+        parent="$(jq -nc --arg repo "${FAKE_CHILD_PARENT%#*}" --argjson n "${FAKE_CHILD_PARENT##*#}" \
+          '{number: $n, repository: {nameWithOwner: $repo}}')"
+      fi
+      echo "{\"data\":{\"repository\":{\"issue\":{\"id\":\"I_$number\",\"parent\":$parent}}}}"
+    fi ;;
+  "issue edit")
+    if [ "$3" = --help ]; then
+      log "probe-native"
+      echo "Flags:"
+      echo "  --add-label name"
+      [ "${FAKE_NATIVE:-}" = 1 ] && echo "  --add-sub-issue issue"
+    elif [[ " $* " == *" --add-sub-issue "* ]]; then
+      log "native-link $3 ${*: -1}"
+    else
+      log "issue-edit-body $3"
+      cp "${*: -1}" "$FAKE_WRITTEN"
+    fi ;;
+  "extension list")
+    log "probe-extension"
+    [ "${FAKE_EXTENSION:-}" = 1 ] && printf 'gh sub-issue\tyahsan2/gh-sub-issue\tv0.3.0\n'
+    true ;;
+  "sub-issue add")
+    log "extension-link $3 $4" ;;
+  "issue view")
+    log "parent-body $3"
+    jq -n --arg body "${FAKE_PARENT_BODY-Epic body.}" '{body: $body}' ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

@@ -1,0 +1,4 @@
+{
+  "changed": true,
+  "body": "spec-ref: x\n  blocked-by: example-org/other#7\n<!-- blocked-by: example-org/other#7 -->\nblocked-by: #6\n"
+}

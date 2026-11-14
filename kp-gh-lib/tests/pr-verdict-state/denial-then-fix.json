@@ -1,0 +1,17 @@
+{
+ "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+ "comments": [
+  {
+   "id": 11,
+   "body": "<!-- kp-review-gh-pr:verdict -->\nverdict: REQUEST_CHANGES\nreviewed: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n\n## Review: changes requested\n\n### TL;DR (for humans)\nTwo blockers remain and CI is red. Fix the timeout first.\n\n---\n\n### Findings (for the build agent)\n**Blockers**\n- `kp-gh-lib/scripts/foo.sh:10` \u2014 blocker 1. Why: it breaks.\n  Fix: guard it. (AC/rule: AC1)\n- `kp-gh-lib/scripts/foo.sh:11` \u2014 blocker 2. Why: it breaks.\n  Fix: guard it. (AC/rule: AC2)\n\n**Major / Minor / Nits**\n- `kp-fix-pr/SKILL.md:40` \u2014 nit 1. Fix: reword.\n\n**CI**\n- validate \u2014 https://github.com/example-org/shop-tools/actions/runs/1\n\n---\nRe-run after fixing: `/kp-do-gh-task 90` \u00b7 Issue: #90\n",
+   "created_at": "2026-09-12T08:00:00Z",
+   "updated_at": "2026-09-12T08:00:00Z"
+  },
+  {
+   "id": 12,
+   "body": "<!-- kp-fix-pr:summary -->\npushed: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n## Fix round 1\n\nAddressed both blockers and the failing check.\n- fixed the retry loop\n- pinned the action\n",
+   "created_at": "2026-09-12T09:00:00Z",
+   "updated_at": "2026-09-12T09:00:00Z"
+  }
+ ]
+}

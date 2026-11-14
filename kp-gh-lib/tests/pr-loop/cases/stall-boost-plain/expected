@@ -1,0 +1,2 @@
+outcome=stalled reason='stalled (2 cycles, findings not reduced); decision #300' state=LOG/pr-loop-demo-12.state.json
+exit 4

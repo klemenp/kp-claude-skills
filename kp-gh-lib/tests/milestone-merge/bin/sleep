@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# A stand-in for `sleep`: logs `sleep <seconds>` to $FAKE_CALL_LOG and returns at once.
+set -euo pipefail
+echo "sleep $*" >>"$FAKE_CALL_LOG"

@@ -1,0 +1,6 @@
+launch /kp-review-gh-pr 12 --project example-org/4
+launch-args --model sonnet
+pr checks
+pr checks
+launch /kp-do-gh-pr-loop-escalate 12 --project example-org/4 --evidence LOG/pr-loop-demo-12.evidence.json
+launch-args --model sonnet

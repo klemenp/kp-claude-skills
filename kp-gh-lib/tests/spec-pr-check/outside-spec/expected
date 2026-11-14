@@ -1,0 +1,1 @@
+FAIL outside-spec: README.md matches none of docs/specs/**/*.md, specs/**/*.md, SPEC*.md

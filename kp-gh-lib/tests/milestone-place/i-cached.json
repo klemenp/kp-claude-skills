@@ -1,0 +1,20 @@
+{
+  "specRepo": "o/spec",
+  "projectRepos": [
+    "o/be",
+    "o/spec"
+  ],
+  "epics": [],
+  "audits": [],
+  "args": [
+    "--repo",
+    "o/be"
+  ],
+  "cache": {
+    "project": "o/1",
+    "milestone": "M2",
+    "epics": [
+      "o/spec#20"
+    ]
+  }
+}

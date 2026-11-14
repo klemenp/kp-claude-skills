@@ -1,0 +1,11 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "blocked-by",
+    "--replace",
+    "#5",
+    "example-org/demo#5"
+  ],
+  "body": "blocked-by: #5\n"
+}

@@ -1,0 +1,41 @@
+{
+  "specRepo": "o/spec",
+  "item": {
+    "repo": "o/be",
+    "number": 5,
+    "epic": 20
+  },
+  "epics": [
+    {
+      "repo": "o/spec",
+      "number": 10,
+      "milestone": "M1",
+      "children": [
+        {
+          "repo": "o/be",
+          "number": 1,
+          "state": "CLOSED",
+          "closedAt": "2026-09-10T00:00:00Z"
+        },
+        {
+          "repo": "o/be",
+          "number": 2,
+          "state": "CLOSED",
+          "closedAt": "2026-09-12T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "repo": "o/spec",
+      "number": 20,
+      "milestone": "M2",
+      "children": [
+        {
+          "repo": "o/be",
+          "number": 5,
+          "state": "OPEN"
+        }
+      ]
+    }
+  ]
+}

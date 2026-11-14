@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Stub `curl` for the send.sh suite: records how it was called and answers as told.
+#   $SEND_CURL_ARGS      file its arguments are appended to, one per line
+#   $SEND_CURL_STDIN     file its standard input is written to
+#   $SEND_CURL_RESPONSE  what it prints
+#   $SEND_CURL_EXIT      its exit status (default 0)
+set -euo pipefail
+
+printf '%s\n' "$@" >>"$SEND_CURL_ARGS"
+cat >"$SEND_CURL_STDIN"
+printf '%s' "${SEND_CURL_RESPONSE:-}"
+exit "${SEND_CURL_EXIT:-0}"

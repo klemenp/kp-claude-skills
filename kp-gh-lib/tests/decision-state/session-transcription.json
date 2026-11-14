@@ -1,0 +1,4 @@
+{"args": ["example-org/demo", "12"], "comments": [
+  {"id": 302, "html_url": "https://github.com/example-org/demo/issues/12#issuecomment-302", "created_at": "2026-10-01T10:00:00Z", "user": {"login": "example-org", "type": "User"}, "body": "**Decision (operator, via Claude Code):**\n\n> Option B\n\n<!-- decision-source: claude-code-session -->"},
+  {"id": 301, "html_url": "https://github.com/example-org/demo/issues/12#issuecomment-301", "created_at": "2026-10-01T10:00:00Z", "user": {"login": "example-org", "type": "User"}, "body": "  <!-- decision-source: kp-create-gh-item -->  \nA"}
+]}

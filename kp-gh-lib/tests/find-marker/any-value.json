@@ -1,0 +1,42 @@
+{
+  "args": [
+    "example-org/demo",
+    "blocked-by",
+    "--any-value"
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "blocked-by: #4\nblocked-by: example-org/x#9\nblocked-by: #4\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/1"
+    },
+    {
+      "number": 2,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "blocked-by:\n<details>\nblocked-by: #7\n</details>\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/2"
+    },
+    {
+      "number": 3,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "not-blocked-by: #5\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/3"
+    }
+  ]
+}

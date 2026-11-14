@@ -1,0 +1,8 @@
+{
+  "specRepo": "o/spec",
+  "projectRepos": [
+    "o/be",
+    "o/spec"
+  ],
+  "epics": []
+}

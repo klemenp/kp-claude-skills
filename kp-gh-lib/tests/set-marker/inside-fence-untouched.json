@@ -1,0 +1,10 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "blocked-by",
+    "--remove",
+    "#4"
+  ],
+  "body": "Intro.\n<!-- human-only:start -->\nblocked-by: #4\n<!-- human-only:end -->\nblocked-by: #4\n"
+}

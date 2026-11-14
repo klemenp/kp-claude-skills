@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Fake gh for the epic-convert fixtures: serves the issue from $FAKE_ISSUE, fails the call
+# a FAKE_*_FAIL knob names, and logs one line per call to $FAKE_LOG.
+set -euo pipefail
+
+log() { echo "$*" >> "$FAKE_LOG"; }
+
+case "$1 $2" in
+  "api repos/"*)
+    log "api $2"
+    [ "${FAKE_READ_FAIL:-}" = 1 ] && { echo "HTTP 502: read failed" >&2; exit 1; }
+    printf '%s\n' "$FAKE_ISSUE" ;;
+  "issue edit")
+    log "$*"
+    [ "${FAKE_EDIT_FAIL:-}" = 1 ] && { echo "HTTP 502: edit failed" >&2; exit 1; }
+    true ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

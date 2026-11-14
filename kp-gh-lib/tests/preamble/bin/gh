@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Fake gh for the preamble fixtures: answers the calls preamble.sh and resolve-board.sh
+# make for a --no-item run and the --pr read, logs every call to $FAKE_LOG, and fails any
+# other call.
+set -euo pipefail
+
+echo "$*" >> "$FAKE_LOG"
+
+case "$1 $2" in
+  "auth status") ;;
+  "repo view")
+    echo '{"nameWithOwner":"example-org/demo","defaultBranchRef":{"name":"main"}}' ;;
+  "api graphql")
+    if [[ "$*" == *"projectV2(number:"* ]]; then
+      cat <<'JSON'
+{"data":{"user":{"projectV2":{"id":"PVT_demo","fields":{"nodes":[
+  {"id":"PVTSSF_status","name":"Status","options":[{"id":"s-ready","name":"Ready"},{"id":"s-done","name":"Done"}]},
+  {"id":"PVTSSF_priority","name":"Priority","options":[{"id":"p-0","name":"P0"},{"id":"p-1","name":"P1"}]},
+  {}]}}}}}
+JSON
+    else
+      echo "fake gh: unexpected graphql call: $*" >&2
+      exit 1
+    fi ;;
+  "pr view")
+    # A PR into a non-default base: GitHub lists no closing reference, the body has one.
+    echo '{"number":9,"headRefName":"task/42-thing","headRefOid":"abc","baseRefName":"release/M7","isDraft":false,"state":"OPEN","closingIssuesReferences":[],"body":"Closes #42. Builds the thing."}' ;;
+  "project list")
+    printf '4\tKP Demo\topen\tPVT_demo\n' ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

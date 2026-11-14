@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+"""A stand-in for `gh`, answering only the calls milestone-merge.sh makes, from the
+scenario file named by $FAKE_GH_SCENARIO:
+  defaultBranch  repo → default branch (default `main`)
+  branches       repos carrying release/M1 at the start of the run
+  syncConflict   repos whose POST merges answers 409
+  checks         repo → `pass` (default) | `fail` | `pending`
+  noChecks       repo → the `gh pr checks` call numbers (1-based, counted per run across
+                 repos in $FAKE_CHECKS_COUNTER) that report `no checks reported`, or
+                 `all`
+  failRepo       repos whose GET repos/{r} fails
+Mutable state — the PRs created and the branches deleted — lives in $FAKE_GH_STATE, so a
+re-run sees what an earlier run did. Each mutating call and CI wait is appended to
+$FAKE_CALL_LOG as one line; each created PR's body to $FAKE_PR_BODY_LOG. `gh pr checks`,
+watched or not, returns at once. A created PR is number 7; a merged repo's HEAD is
+`merge-<owner>-<name>`."""
+import json
+import os
+import sys
+
+CREATED_PR = 7
+scenario = json.load(open(os.environ["FAKE_GH_SCENARIO"]))
+state_path = os.environ["FAKE_GH_STATE"]
+state = json.load(open(state_path)) if os.path.getsize(state_path) else {"prs": {}, "deleted": []}
+args = sys.argv[1:]
+
+
+def save_state():
+    with open(state_path, "w") as handle:
+        json.dump(state, handle)
+
+
+def log(line):
+    with open(os.environ["FAKE_CALL_LOG"], "a") as handle:
+        handle.write(line + "\n")
+
+
+def option(name):
+    return args[args.index(name) + 1]
+
+
+def next_checks_call():
+    counter_path = os.environ["FAKE_CHECKS_COUNTER"]
+    count = (int(open(counter_path).read()) if os.path.exists(counter_path) else 0) + 1
+    with open(counter_path, "w") as handle:
+        handle.write(str(count))
+    return count
+
+
+def has_branch(repo):
+    return repo in scenario.get("branches", []) and repo not in state["deleted"]
+
+
+def default_branch(repo):
+    return scenario.get("defaultBranch", {}).get(repo, "main")
+
+
+def api():
+    fields = dict(args[i + 1].split("=", 1) for i, arg in enumerate(args) if arg == "-f")
+    path = next(arg for arg in args[1:] if arg.startswith("repos/"))
+    route, _, query = path.partition("?")
+    owner, name, *rest = route.removeprefix("repos/").split("/")
+    repo = f"{owner}/{name}"
+    if not rest:
+        if repo in scenario.get("failRepo", []):
+            sys.exit("gh: Server Error (HTTP 502)")
+        print(json.dumps({"default_branch": default_branch(repo)}))
+    elif rest == ["branches", "release", "M1"]:
+        if not has_branch(repo):
+            sys.exit("gh: Branch not found (HTTP 404)")
+        print(json.dumps({"name": "release/M1"}))
+    elif rest == ["merges"]:
+        log(f"merges {repo} base={fields['base']} head={fields['head']}")
+        if repo in scenario.get("syncConflict", []):
+            sys.exit("gh: Merge conflict (HTTP 409)")
+    elif rest == ["pulls"]:
+        want = f"head={owner}:release/M1&base={default_branch(repo)}&state=open"
+        if query != want:
+            sys.exit(f"fake gh: unexpected pulls query {query!r}")
+        pr = state["prs"].get(repo)
+        print(json.dumps([{"number": pr}] if pr else []))
+    elif rest == ["commits", default_branch(repo)]:
+        print(json.dumps({"sha": f"merge-{owner}-{name}"}))
+    else:
+        sys.exit(f"fake gh: unexpected api call {args!r}")
+
+
+def pr():
+    command = args[1]
+    repo = option("-R")
+    if command == "create":
+        log(f"pr-create {repo} base={option('--base')} head={option('--head')} "
+            f"title={option('--title')}")
+        with open(os.environ["FAKE_PR_BODY_LOG"], "a") as handle:
+            handle.write(option("--body") + "\n")
+        state["prs"][repo] = CREATED_PR
+        save_state()
+        print(f"https://github.com/{repo}/pull/{CREATED_PR}")
+    elif command == "checks":
+        log(f"pr-checks {repo} {args[2]}")
+        call = next_checks_call()
+        no_checks = scenario.get("noChecks", {}).get(repo, [])
+        if no_checks == "all" or call in no_checks:
+            sys.exit("no checks reported on the 'release/M1' branch")
+        outcome = scenario.get("checks", {}).get(repo, "pass")
+        sys.exit({"pass": 0, "fail": 1, "pending": 8}[outcome])
+    elif command == "merge":
+        log(f"pr-merge {repo} {' '.join(args[2:])}")
+        state["deleted"].append(repo)
+        del state["prs"][repo]
+        save_state()
+    else:
+        sys.exit(f"fake gh: unexpected pr call {args!r}")
+
+
+if args[0] == "api":
+    api()
+elif args[0] == "pr":
+    pr()
+else:
+    sys.exit(f"fake gh: unexpected call {args!r}")

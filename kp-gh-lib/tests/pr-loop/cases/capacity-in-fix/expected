@@ -1,0 +1,2 @@
+outcome=capacity-limit reason='session-limit in the fix phase' reset='5pm (Europe/Berlin)' state=LOG/pr-loop-demo-12.state.json
+exit 5

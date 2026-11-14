@@ -1,0 +1,8 @@
+{"history": [
+  {"kind": "verdict", "verdict": "REQUEST_CHANGES", "reviewed": "__REVIEWED__",
+   "createdAt": "2026-10-01T10:00:00Z",
+   "findings": "- `src/app.py:12` — off-by-one. Why: wrong total. Fix: use <=.\n- `src/app.py:30-34` — unchecked None. Why: crash. Fix: guard it.",
+   "body": "<!-- kp-review-gh-pr:verdict -->\nverdict: REQUEST_CHANGES\nreviewed: __REVIEWED__\n\n### Acceptance basis\nbody-sha256: __BODY_SHA__\n- [ ] It works"},
+  {"kind": "fixSummary", "createdAt": "2026-10-01T11:00:00Z",
+   "body": "<!-- kp-fix-pr:summary -->\npushed: abc1234\n\nFixed both findings."}
+]}

@@ -1,0 +1,24 @@
+{
+  "specRepo": "o/spec",
+  "projectRepos": [
+    "o/be",
+    "o/plan",
+    "o/spec",
+    "o/web"
+  ],
+  "epics": [
+    {
+      "repo": "o/plan",
+      "number": 20,
+      "milestone": "M2",
+      "children": [
+        {
+          "repo": "o/web",
+          "number": 5,
+          "state": "OPEN"
+        }
+      ]
+    }
+  ],
+  "audits": []
+}

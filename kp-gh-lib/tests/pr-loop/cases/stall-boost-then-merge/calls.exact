@@ -1,0 +1,14 @@
+launch /kp-review-gh-pr 12 --project example-org/4
+launch-args --model opus
+launch /kp-fix-pr 12 --project example-org/4
+launch-args --model opus
+launch /kp-review-gh-pr 12 --project example-org/4
+launch-args --model opus
+launch /kp-fix-pr 12 --project example-org/4
+launch-args --model opus
+launch /kp-review-gh-pr 12 --project example-org/4
+launch-args --model opus --effort xhigh
+issue close 7
+set-status PVT_demo ITEM_7 FIELD_status OPT_done
+unblock-dependents example-org/demo 7 PVT_demo FIELD_status OPT_blocked OPT_ready
+branch-cleanup task/7-demo

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Fake gh for the goal-question fixtures: keeps one issue's title, body, labels and
+# comments in $FAKE_STATE/issue.json, answers the calls goal-question.sh makes, and fails
+# the comment post when FAKE_COMMENT_FAIL=1.
+set -euo pipefail
+
+state="$FAKE_STATE/issue.json"
+update() { jq "$@" "$state" > "$state.new" && mv "$state.new" "$state"; }
+
+case "$1 $2" in
+  "issue view")
+    jq '{title, body, labels: [.labels[] | {name: .}], comments}' "$state" ;;
+  "issue comment")
+    [ "${FAKE_COMMENT_FAIL:-}" = 1 ] && { echo "HTTP 502: comment failed" >&2; exit 1; }
+    id=$((1000 + $(jq '.comments | length' "$state")))
+    url="https://github.com/example-org/demo/issues/$3#issuecomment-$id"
+    update --rawfile text "${*: -1}" --arg url "$url" '.comments += [{body: $text, url: $url}]'
+    echo "$url" ;;
+  "issue edit")
+    shift 2
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --title) update --arg value "$2" '.title = $value' ;;
+        --body-file) update --rawfile value "$2" '.body = $value' ;;
+        --add-label) update --arg value "$2" '.labels = (.labels - [$value]) + [$value]' ;;
+        --remove-label) update --arg value "$2" '.labels -= [$value]' ;;
+      esac
+      shift
+    done ;;
+  "label create") ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac

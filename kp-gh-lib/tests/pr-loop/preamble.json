@@ -1,0 +1,6 @@
+{"repo":"example-org/demo","defaultBranch":"main",
+ "project":{"owner":"example-org","number":4,"id":"PVT_demo","ownerType":"User"},
+ "status":{"fieldId":"FIELD_status","options":{"Ready":"OPT_ready","Blocked":"OPT_blocked","In review":"OPT_review","Done":"OPT_done"}},
+ "priority":{"fieldId":"FIELD_priority","options":{},"top":"OPT_top"},
+ "issue":7,"itemId":"ITEM_7","itemStatus":"In review",
+ "pr":{"number":12,"head":"task/7-demo","headSha":"aaaaaaa","base":"main","isDraft":false,"state":"OPEN"}}

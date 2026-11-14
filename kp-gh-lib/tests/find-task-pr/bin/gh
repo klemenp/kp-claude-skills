@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Fake `gh` for find-task-pr.sh: answers its three reads from the files in
+# $FIND_TASK_PR_CASE — pr-list.json, issue.json, pr-<n>.json. A read with no file
+# fails, as a GitHub error would.
+set -euo pipefail
+
+case "$1 $2" in
+  "pr list") file="$FIND_TASK_PR_CASE/pr-list.json" ;;
+  "issue view") file="$FIND_TASK_PR_CASE/issue.json" ;;
+  "pr view") file="$FIND_TASK_PR_CASE/pr-$3.json" ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac
+[ -f "$file" ] || { echo "fake gh: no fixture for: $*" >&2; exit 1; }
+cat "$file"

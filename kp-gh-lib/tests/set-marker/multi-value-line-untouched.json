@@ -1,0 +1,10 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "blocked-by",
+    "--remove",
+    "#38"
+  ],
+  "body": "blocked-by: #38 #39\nblocked-by:  #38\n"
+}

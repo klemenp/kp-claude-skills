@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Fake `gh` for ready-sweep.sh and the real decision-state.sh it calls.
+
+Answers from the case file $READY_SWEEP_CASE and appends one line per call to
+$READY_SWEEP_LOG (`graphql <user|organization>`, `issue-view <owner/name>#<n>` or
+`comments <owner/name>#<n>`). Case keys:
+  owner     "user" (default) or "organization" — an organization's user query answers
+            NOT_FOUND beside "user":null, as GitHub does.
+  board     the sweep's nodes, each {"status", "repo", "number", "state" (default OPEN),
+            "labels"}, or {"draft": true} for a node with no issue content.
+  issues    "<owner/name>#<n>" → any of {"title", "body", "labels"}; the defaults are the
+            title "[X] Item <n>", an empty body and the board node's labels.
+  comments  "<owner/name>#<n>" → comment bodies, oldest first (default none).
+$READY_SWEEP_FAIL_VIEW=1 makes every `issue view` fail.
+"""
+import json
+import os
+import re
+import sys
+
+args = sys.argv[1:]
+with open(os.environ["READY_SWEEP_CASE"]) as handle:
+    case = json.load(handle)
+
+
+def log(line):
+    with open(os.environ["READY_SWEEP_LOG"], "a") as handle:
+        handle.write(line + "\n")
+
+
+def flag(name):
+    return args[args.index(name) + 1]
+
+
+def board_node(entry):
+    if entry.get("draft"):
+        return {"id": "PVTI_draft", "fieldValueByName": {"name": "Ready"}, "content": {}}
+    return {"id": f"PVTI_{entry['repo']}#{entry['number']}",
+            "fieldValueByName": {"name": entry["status"]},
+            "content": {"number": entry["number"], "state": entry.get("state", "OPEN"),
+                        "repository": {"nameWithOwner": entry["repo"]},
+                        "labels": {"nodes": [{"name": label} for label in entry["labels"]]}}}
+
+
+def graphql():
+    owner_kind = re.search(r"(user|organization)\(login:", flag("-f")).group(1)
+    log(f"graphql {owner_kind}")
+    if owner_kind != case.get("owner", "user"):
+        print(json.dumps({"data": {"user": None}, "errors": [
+            {"type": "NOT_FOUND", "message": "Could not resolve to a User"}]},
+            separators=(",", ":")))
+        sys.exit(1)
+    nodes = [board_node(entry) for entry in case["board"]]
+    print(json.dumps([{"data": {owner_kind: {"projectV2": {"items": {
+        "pageInfo": {"hasNextPage": False, "endCursor": None}, "nodes": nodes}}}}}]))
+
+
+def issue_view():
+    repo, number = flag("-R"), int(args[2])
+    ref = f"{repo}#{number}"
+    log(f"issue-view {ref}")
+    if os.environ.get("READY_SWEEP_FAIL_VIEW") == "1":
+        print(f"fake gh: issue view {ref} failed", file=sys.stderr)
+        sys.exit(1)
+    node = next(entry for entry in case["board"]
+                if entry.get("repo") == repo and entry.get("number") == number)
+    issue = case.get("issues", {}).get(ref, {})
+    print(json.dumps({
+        "number": number, "state": node.get("state", "OPEN"), "assignees": [],
+        "title": issue.get("title", f"[X] Item {number}"), "body": issue.get("body", ""),
+        "labels": [{"name": label} for label in issue.get("labels", node["labels"])]}))
+
+
+def comments():
+    repo, number = re.fullmatch(r"repos/(.+)/issues/(\d+)/comments", args[3]).groups()
+    ref = f"{repo}#{number}"
+    log(f"comments {ref}")
+    bodies = case.get("comments", {}).get(ref, [])
+    print(json.dumps([[{"id": 1000 + index, "html_url": f"https://github.com/{repo}/issues/{number}",
+                        "created_at": f"2026-01-01T00:00:{index:02d}Z",
+                        "user": {"login": "someone", "type": "User"}, "body": body}
+                       for index, body in enumerate(bodies)]]))
+
+
+if args[:2] == ["api", "graphql"]:
+    graphql()
+elif args[:2] == ["issue", "view"]:
+    issue_view()
+elif args[:3] == ["api", "-X", "GET"] and args[3].endswith("/comments"):
+    comments()
+else:
+    print(f"fake gh: unexpected call: {' '.join(args)}", file=sys.stderr)
+    sys.exit(1)

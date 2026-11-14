@@ -1,0 +1,5 @@
+{"views": 2,
+ "board": [
+  {"status": "Ready", "repo": "o/a", "number": 1, "labels": ["type:coding", "repo:a", "model:haiku"]},
+  {"status": "Ready", "repo": "o/a", "number": 2, "labels": ["type:coding", "repo:a"]}
+ ]}

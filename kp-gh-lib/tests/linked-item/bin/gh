@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Fake `gh` for linked-item.sh: answers its two reads from the files in
+# $LINKED_ITEM_CASE — pr.json and issue.json. A read with no file fails, as a GitHub
+# error would, so a case without issue.json also proves no issue was read.
+set -euo pipefail
+
+case "$1 $2" in
+  "pr view") file="$LINKED_ITEM_CASE/pr.json" ;;
+  "issue view") file="$LINKED_ITEM_CASE/issue.json" ;;
+  *) echo "fake gh: unexpected call: $*" >&2; exit 1 ;;
+esac
+[ -f "$file" ] || { echo "fake gh: no fixture for: $*" >&2; exit 1; }
+cat "$file"

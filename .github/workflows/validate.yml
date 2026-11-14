@@ -1,0 +1,48 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Validate skill contract
+        run: python3 .github/scripts/validate_skills.py
+
+      - name: Shellcheck
+        run: |
+          shopt -s globstar nullglob dotglob
+          # dotglob: the hooks this repo enforces with live under .claude/ and
+          # .githooks/; .githooks/* is listed explicitly because those files
+          # carry no .sh extension.
+          scripts=(**/*.sh .githooks/*)
+          if [ ${#scripts[@]} -eq 0 ]; then echo "no shell scripts"; exit 0; fi
+          shellcheck "${scripts[@]}"
+
+      - name: Fixture suites
+        run: .github/scripts/run_fixture_suites.sh
+
+      - name: Byte-compile Python
+        run: |
+          shopt -s globstar nullglob dotglob
+          sources=(**/*.py)
+          if [ ${#sources[@]} -eq 0 ]; then echo "no python sources"; exit 0; fi
+          python3 -m py_compile "${sources[@]}"
+
+      - name: Lint Python
+        run: |
+          pipx install --quiet ruff==0.17.5
+          ruff check --config .github/ruff.toml .

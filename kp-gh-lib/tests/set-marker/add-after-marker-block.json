@@ -1,0 +1,10 @@
+{
+  "args": [
+    "example-org/demo",
+    "7",
+    "spec-pr",
+    "--add",
+    "https://github.com/example-org/spec/pull/3"
+  ],
+  "body": "Text.\n\nspec-ref: x\nblocks: #2"
+}

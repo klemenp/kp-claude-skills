@@ -1,0 +1,2 @@
+outcome=merge-blocked reason='merge-blocked (BLOCKED); decision #300' state=LOG/pr-loop-demo-12.state.json
+exit 4

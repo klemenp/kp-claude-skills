@@ -1,0 +1,42 @@
+{
+  "args": [
+    "example-org/demo",
+    "spec-ref",
+    "REQ-1"
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "<!-- human-only:start -->\nspec-ref: REQ-1\n<!-- human-only:end -->\n\nbody text",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/1"
+    },
+    {
+      "number": 2,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "intro\n<!-- human-only:start\nspec-ref: REQ-1\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/2"
+    },
+    {
+      "number": 3,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "<!-- human-only:start -->blurb<!-- human-only:end -->\n  spec-ref: REQ-1  \n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/3"
+    }
+  ]
+}

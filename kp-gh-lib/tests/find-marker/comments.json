@@ -1,0 +1,34 @@
+{
+  "args": [
+    "example-org/demo",
+    "kp-resolve-spec-research:gate research",
+    "example-org/demo#12",
+    "--comments"
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:coding"
+      ],
+      "body": "Question?\n\n<!-- kp-resolve-spec-research:gate research: example-org/demo#12 -->\n",
+      "comments": [
+        {
+          "id": 101,
+          "body": "Raised as a goal question.\n\n```\nTitle\n\n<!-- kp-resolve-spec-research:gate research: #12 -->\n```\n"
+        },
+        {
+          "id": 102,
+          "body": "<details>\nkp-resolve-spec-research:gate research: #12\n</details>"
+        },
+        {
+          "id": 103,
+          "body": "kp-resolve-spec-research:gate research: #120"
+        }
+      ],
+      "url": "https://github.com/example-org/demo/issues/1"
+    }
+  ]
+}

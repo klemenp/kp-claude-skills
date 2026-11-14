@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""Fake `gh` for blocker-state.sh and the real milestone-of.sh / find-task-pr.sh it calls.
+
+Answers from $BLOCKER_STATE_CASE: body.md is item owner/repo#7's body; items.json maps
+"<owner/repo>#<n>" to {"kind": "issue"|"pr", "state", "milestone": <k>|null,
+"taskPr": "OPEN"|"MERGED"|"CLOSED"|null} (defaults: issue, OPEN, null, null). A lookup of
+an item items.json lacks fails, as a GitHub error would.
+"""
+import json
+import os
+import sys
+
+ITEM = "owner/repo#7"
+case = os.environ["BLOCKER_STATE_CASE"]
+args = sys.argv[1:]
+
+
+def flag(name):
+    return args[args.index(name) + 1]
+
+
+def die(message):
+    print(f"fake gh: {message}: {' '.join(args[:2])}", file=sys.stderr)
+    sys.exit(1)
+
+
+def entry(ref):
+    with open(os.path.join(case, "items.json")) as handle:
+        items = json.load(handle)
+    if ref not in items:
+        die(f"no fixture for {ref}")
+    return {"kind": "issue", "state": "OPEN", "milestone": None, "taskPr": None, **items[ref]}
+
+
+def graphql():
+    fields = dict(arg.split("=", 1) for arg in args if "=" in arg and not arg.startswith("query="))
+    found = entry(f"{fields['owner']}/{fields['repo']}#{fields['num']}")
+    node = {"state": found["state"]}
+    if found["kind"] == "issue":
+        node["parent"] = None
+        if found["milestone"] is not None:
+            node["parent"] = {
+                "number": 1, "state": "OPEN", "parent": None,
+                "body": f"spec-ref: milestone:M{found['milestone']}\n",
+                "repository": {"nameWithOwner": f"{fields['owner']}/{fields['repo']}"},
+                "labels": {"nodes": [{"name": "type:epic"}]}}
+    return {"data": {"repository": {"issueOrPullRequest": node}}}
+
+
+def issue_view():
+    ref = f"{flag('-R')}#{args[2]}"
+    field = flag("--json")
+    if field == "body":
+        if ref != ITEM:
+            die("body read for a blocker")
+        with open(os.path.join(case, "body.md")) as handle:
+            return {"body": handle.read()}
+    found = entry(ref)
+    if field == "url":
+        path = "pull" if found["kind"] == "pr" else "issues"
+        return {"url": f"https://github.com/{flag('-R')}/{path}/{args[2]}"}
+    if field == "closedByPullRequestsReferences":
+        return {"closedByPullRequestsReferences": []}
+    die("unexpected field")
+
+
+def pr_list():
+    number = flag("--search").removeprefix("head:task/").rstrip("-")
+    state = entry(f"{flag('-R')}#{number}")["taskPr"]
+    if state is None:
+        return []
+    return [{"number": 900, "state": state, "isDraft": False,
+             "headRefName": f"task/{number}-work", "mergeStateStatus": "CLEAN"}]
+
+
+if args[:2] == ["api", "graphql"]:
+    print(json.dumps(graphql()))
+elif args[:2] == ["issue", "view"]:
+    print(json.dumps(issue_view()))
+elif args[:2] == ["pr", "list"]:
+    print(json.dumps(pr_list()))
+else:
+    die("unexpected call")

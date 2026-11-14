@@ -1,0 +1,4 @@
+issue close 7
+set-status PVT_demo ITEM_7 FIELD_status OPT_done
+unblock-dependents example-org/demo 7 PVT_demo FIELD_status OPT_blocked OPT_ready
+branch-cleanup task/7-demo

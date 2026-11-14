@@ -1,0 +1,20 @@
+{
+  "args": [
+    "example-org/demo",
+    "--issue",
+    "38"
+  ],
+  "issues": [
+    {
+      "number": 103,
+      "repo": "example-org/demo",
+      "state": "OPEN",
+      "labels": [
+        "type:decision"
+      ],
+      "body": "Question first.\n<!-- human-only:start -->\nblocks: #38\n<!-- human-only:end -->\n",
+      "comments": [],
+      "url": "https://github.com/example-org/demo/issues/103"
+    }
+  ]
+}

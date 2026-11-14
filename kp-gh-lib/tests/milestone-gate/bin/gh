@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+"""A stand-in for `gh`, answering only the calls milestone-gate.sh and milestone-of.sh
+make, from the scenario file named by $FAKE_GH_SCENARIO."""
+import json
+import os
+import sys
+
+scenario = json.load(open(os.environ["FAKE_GH_SCENARIO"]))
+args = sys.argv[1:]
+fields = {args[i + 1].split("=", 1)[0]: args[i + 1].split("=", 1)[1]
+          for i, arg in enumerate(args) if arg in ("-f", "-F")}
+epics = {epic["number"]: epic for epic in scenario["epics"]}
+
+
+def labelled(*names):
+    return [{"name": name} for name in names]
+
+
+def epic_node(epic):
+    return {"number": epic["number"], "state": "OPEN", "parent": None,
+            "body": f"spec-ref: milestone:{epic['milestone']}",
+            "repository": {"nameWithOwner": epic["repo"]}, "labels": {"nodes": labelled("type:epic")}}
+
+
+def search_hit(issue, repo, label):
+    return {"number": issue["number"], "state": issue.get("state", "closed"),
+            "created_at": issue.get("created_at", "2026-01-01T00:00:00Z"), "body": issue["body"],
+            "node_id": f"EPIC_{issue['number']}", "labels": labelled(label),
+            "repository_url": f"https://api.github.com/repos/{repo}"}
+
+
+def project_repos():
+    """The fixture's `projectRepos`, or by default every repo its item, epics, audits and
+    decisions sit in, so a fixture without the key sees all of them linked."""
+    if "projectRepos" in scenario:
+        return scenario["projectRepos"]
+    item_repos = {scenario["item"]["repo"]} if "item" in scenario else set()
+    return sorted(item_repos | {scenario["specRepo"]}
+                  | {epic["repo"] for epic in scenario["epics"]}
+                  | {audit.get("repo", scenario["specRepo"]) for audit in scenario.get("audits", [])})
+
+
+def parent_node():
+    """The looked-up issue's parent: from the optional `issues` map, keyed
+    "<owner/repo>#<n>" — {"epic": <n>}, {"epic": null} (no parent), {"epic": null,
+    "root": <n>} (a plain open issue in the same repo), {"fail": true} (exit 1) — or,
+    for an issue not in it, the scenario item's epic."""
+    repo = f"{fields['owner']}/{fields['repo']}"
+    issue = scenario.get("issues", {}).get(f"{repo}#{fields['num']}")
+    if issue is None:
+        return epic_node(epics[scenario["item"]["epic"]])
+    if issue.get("fail"):
+        sys.exit(f"fake gh: lookup of {repo}#{fields['num']} failed")
+    if issue["epic"] is not None:
+        return epic_node(epics[issue["epic"]])
+    if "root" in issue:
+        return {"number": issue["root"], "state": "OPEN", "parent": None, "body": "",
+                "repository": {"nameWithOwner": repo}, "labels": {"nodes": []}}
+    return None
+
+
+def answer():
+    if args[:2] == ["api", "graphql"] and "projectV2" in fields["query"]:
+        return {"data": {"repositoryOwner": {"projectV2": {"repositories": {
+            "nodes": [{"nameWithOwner": repo} for repo in project_repos()]}}}}}
+    if args[:2] == ["api", "graphql"] and "num" in fields:
+        return {"data": {"repository": {"issueOrPullRequest": {
+            "state": "OPEN", "parent": parent_node()}}}}
+    if args[:2] == ["api", "graphql"]:
+        children = epics[int(fields["id"].removeprefix("EPIC_"))]["children"]
+        return {"data": {"node": {"subIssues": {
+            "pageInfo": {"hasNextPage": False, "endCursor": None},
+            "nodes": [{"id": f"I_{child['number']}", "number": child["number"],
+                       "state": child["state"], "closedAt": child.get("closedAt"),
+                       "body": "", "repository": {"nameWithOwner": child["repo"]},
+                       "labels": {"nodes": labelled("type:coding")}} for child in children]}}}}
+    if args[1].startswith("users/"):
+        return {"type": "User"}
+    if args[1].startswith("repos/"):
+        return {"body": scenario["item"].get("body", "")}
+    query = fields["q"]
+    with open(os.environ["FAKE_GH_SEARCH_LOG"], "a") as log:
+        log.write(query + "\n")
+    if "spec-ref: milestone:" in query:
+        hits = [search_hit(dict(epic, body=epic_node(epic)["body"], state="open"), epic["repo"], "type:epic")
+                for epic in scenario["epics"]]
+    elif "audit-unit" in query:
+        hits = [search_hit(audit, audit.get("repo", scenario["specRepo"]), "type:audit") for audit in scenario.get("audits", [])]
+    elif "audit-close" in query:
+        hits = [search_hit(decision, scenario["specRepo"], "type:decision")
+                for decision in scenario.get("decisions", [])]
+    else:
+        sys.exit(f"fake gh: unexpected search {query!r}")
+    return [{"items": hits}]
+
+
+print(json.dumps(answer()))

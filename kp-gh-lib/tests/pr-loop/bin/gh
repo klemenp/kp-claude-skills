@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Fake gh: the PR view at this launch (or, for a case with pr-view.call<j>.json files, at
+# this call), the PR's checks at this call, and the linked issue. A close is recorded,
+# never performed.
+set -euo pipefail
+# shellcheck source=/dev/null
+. "$(dirname "$0")/fake-lib.sh"
+
+pr_view() {
+  if compgen -G "$FAKE_DIR/pr-view.call*.json" > /dev/null; then
+    fixture_by_call pr-view "$(call_number pr-view)"
+  else
+    fixture_at pr-view json
+  fi
+}
+
+# checks.call<j>.json (none applies → no checks); checks.call<j>.fail fails that one call.
+# Exits 8 while a check is pending, as gh does.
+pr_checks() {
+  local n out
+  n="$(call_number checks)"
+  record "pr checks"
+  [ -f "$FAKE_DIR/checks.call$n.fail" ] && exit 1
+  out="$(fixture_by_call checks "$n")" || out='[]'
+  printf '%s\n' "$out"
+  if jq -e 'any(.[]; .bucket == "pending")' <<< "$out" > /dev/null; then exit 8; fi
+}
+
+case "$1 $2" in
+  "pr view") pr_view ;;
+  "pr checks") pr_checks ;;
+  "issue view") fixture issue-view.json ;;
+  "issue close") record "issue close $3" ;;
+  *) echo "fake gh: unexpected: $*" >&2; exit 1 ;;
+esac

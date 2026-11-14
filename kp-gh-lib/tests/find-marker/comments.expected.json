@@ -1,0 +1,26 @@
+[
+  {
+    "number": 1,
+    "repo": "example-org/demo",
+    "state": "OPEN",
+    "labels": [
+      "type:coding"
+    ],
+    "url": "https://github.com/example-org/demo/issues/1",
+    "value": "example-org/demo#12",
+    "where": "body",
+    "commentId": null
+  },
+  {
+    "number": 1,
+    "repo": "example-org/demo",
+    "state": "OPEN",
+    "labels": [
+      "type:coding"
+    ],
+    "url": "https://github.com/example-org/demo/issues/1",
+    "value": "#12",
+    "where": "comment",
+    "commentId": 101
+  }
+]

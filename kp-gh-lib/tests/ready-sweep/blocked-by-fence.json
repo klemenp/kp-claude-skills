@@ -1,0 +1,9 @@
+{"views": 2,
+ "board": [
+  {"status": "Ready", "repo": "o/a", "number": 1, "labels": ["type:coding", "repo:a"]},
+  {"status": "Ready", "repo": "o/a", "number": 2, "labels": ["type:coding", "repo:a"]}
+ ],
+ "issues": {
+  "o/a#1": {"body": "Build it.\r\n\r\nblocked-by: #3\r\nblocked-by: other/b#9\r\n<!-- human-only:start -->\r\nblocked-by: #4\r\n<!-- human-only:end -->\r\n"},
+  "o/a#2": {"body": "blocked-by: #5\n<!-- human-only:start\nblocked-by: #6\n"}
+ }}

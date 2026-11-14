@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# main advances only by merging a PR on GitHub and pulling. A direct push would move
+# the live skills directory's upstream without review.
+#
+# A task branch also has to name a *real* board item. pre-commit can only check the
+# branch's shape -- it runs offline on every commit -- so the issue number it carries is
+# verified here, on the one path that already needs the network.
+#
+# Escape hatch: `git push --no-verify`.
+set -euo pipefail
+
+readonly PROTECTED_REF='refs/heads/main'
+readonly TASK_REF_PATTERN='^refs/heads/task/([0-9]+)-[a-z0-9._-]+$'
+
+repo_root="$(git rev-parse --show-toplevel)"
+
+target_repo() {
+  python3 - "$repo_root/.claude/spec-sync.json" <<'PY' 2>/dev/null || true
+import json, sys
+try:
+    with open(sys.argv[1]) as handle:
+        print(json.load(handle)["targetRepo"]["value"])
+except Exception:
+    pass
+PY
+}
+
+# Rejects only on a definitive "no such issue". Every other failure -- gh missing, not
+# authenticated, offline, rate-limited -- warns and allows: being unable to reach GitHub
+# must not block a push.
+verify_item() {
+  local issue="$1" repo="$2" failure missing=0
+  failure="$(gh issue view "$issue" --repo "$repo" --json number 2>&1 >/dev/null)" && return 0
+
+  # gh has spelled this several ways ("...an Issue", "...an issue or pull request").
+  shopt -s nocasematch
+  if [[ "$failure" == *"could not resolve to an issue"* ]]; then
+    missing=1
+  fi
+  shopt -u nocasematch
+
+  if [[ "$missing" -eq 1 ]]; then
+    return 1
+  fi
+
+  printf '\n  pre-push: could not verify item #%s in %s; allowing.\n  (%s)\n\n' \
+    "$issue" "$repo" "${failure%%$'\n'*}" >&2
+  return 0
+}
+
+reject() {
+  cat >&2 <<MSG
+
+  Push rejected: $1
+
+  Skill changes go through the board, a worktree, and a PR:
+
+      cd ~/.claude/skills
+      /kp-create-gh-item "<what needs doing>"   # files the item on the KP Skills board
+      /kp-do-gh-task <issue-number>             # worktree + branch + PR
+      git pull                                  # after the merge, to make it live
+
+  Override only when you mean it: git push --no-verify
+
+MSG
+  exit 1
+}
+
+# stdin: <local ref> <local sha> <remote ref> <remote sha>, one line per ref pushed.
+while read -r local_ref _local_sha remote_ref _remote_sha; do
+  if [[ "$remote_ref" == "$PROTECTED_REF" ]]; then
+    reject "$PROTECTED_REF may not be pushed directly. Open a PR from your task branch and merge it on GitHub, then run 'git pull' in ~/.claude/skills to make the change live."
+  fi
+
+  if [[ "$local_ref" =~ $TASK_REF_PATTERN ]]; then
+    issue="${BASH_REMATCH[1]}"
+    repo="$(target_repo)"
+    if [[ -n "$repo" ]] && ! verify_item "$issue" "$repo"; then
+      reject "branch '${local_ref#refs/heads/}' claims item #${issue}, which does not exist in ${repo}."
+    fi
+  fi
+done
+
+exit 0

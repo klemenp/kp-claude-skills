@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Fake `gh` for .claude/hooks/guard_merge.py. Answers the five reads the gate makes from
+# $GUARD_MERGE_CASE/pr-<n>/ and appends every call to $GUARD_MERGE_CASE/calls.log:
+#   pr view <n> -R <repo> --json state,isDraft,headRefOid    view.json
+#   pr checks <n> -R <repo> --json bucket,name               checks.json
+#   api repos/<repo>/pulls/<n>/reviews --paginate            reviews.json
+#   api repos/<repo>/issues/<n>/comments --paginate          comments.json
+#   repo view --json nameWithOwner -q .nameWithOwner         prints fx/code
+# A PR directory holding `view.fail` makes `pr view` fail, as an unreachable GitHub would.
+# Anything else fails loudly.
+set -euo pipefail
+
+echo "$*" >>"$GUARD_MERGE_CASE/calls.log"
+
+unexpected() {
+  echo "fake gh: unexpected call: $*" >&2
+  exit 1
+}
+
+answer() {
+  local file="$GUARD_MERGE_CASE/pr-$1/$2"
+  [ -f "$file" ] || unexpected "no fixture $file"
+  cat "$file"
+}
+
+case "${1:-} ${2:-}" in
+  "pr view")
+    [ ! -f "$GUARD_MERGE_CASE/pr-$3/view.fail" ] || { echo "gh: could not connect" >&2; exit 1; }
+    answer "$3" view.json
+    ;;
+  "pr checks") answer "$3" checks.json ;;
+  "repo view") echo fx/code ;;
+  "api repos/"*)
+    number="${2%/*}"
+    number="${number##*/}"
+    case "$2" in
+      repos/*/pulls/*/reviews) answer "$number" reviews.json ;;
+      repos/*/issues/*/comments) answer "$number" comments.json ;;
+      *) unexpected "$@" ;;
+    esac
+    ;;
+  *) unexpected "$@" ;;
+esac
